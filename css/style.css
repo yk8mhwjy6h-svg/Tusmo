@@ -11,7 +11,9 @@
 body {
   margin: 0;
   Padding: 0;
-  background-color: var(--bg);
+  /* background-color: var(--bg); */
+  background-image: url("https://image.noelshack.com/fichiers/2026/08/2/1771341774-cyberpunl-fond-d-ecran-jpg.jpeg");
+  background-size: cover;
   color: var(--text);
   line-height: 1.6;
   display: flex;
@@ -20,6 +22,7 @@ body {
   font-family: "Audiowide", sans-serif;
   font-weight: 400;
   font-style: normal;
+  cursor: none;
 }
 
 .skeleton {
@@ -30,15 +33,18 @@ body {
   display: flex;
   box-shadow: #ff2bdc;
   margin-left: 50px;
-
+  font-size: 2rem;
+  color: var(--neon-blue);
+  text-shadow: 0 0 10px var(--neon-blue);
+  animation: neonPulse 1.8s ease-in-out infinite;
 
 }
 
 header {
   display: flex;
-  font-size: 50px;
+  font-size: 30px;
   justify-content: center;
-  margin-top: 50px;
+  margin-top: 10px;
 
 }
 
@@ -52,26 +58,75 @@ header {
   flex-direction: column;
   align-items: center;
   margin-top: 20px;
-
-
 }
 
 .grille {
   display: flex;
   justify-content: center;
-  width: 300px;
+  width: 250px;
   border: 1px solid #00f6ff;
   margin-left: 50px;
-  margin-right: 50px;
-  
+  margin-right: 50px;color: var(--neon-blue);
+  box-shadow: 0 0 15px var(--neon-blue);
+  animation: neonPulse 1.8s ease-in-out infinite;
 }
 .cell {
-  width: 60px;
-  height: 60px;
-  border: 2px solid #00f6ff
-
+  box-sizing: border-box;
+  background: var(--neon-blue);
+  opacity: 0.2;
+  width: 50px;
+  height: 50px;
+  color: var(--neon-blue);
+  box-shadow: 0 0 15px var(--neon-blue);
+  animation: neonPulse 1.8s ease-in-out infinite;
+  border: 3px solid var(--neon-blue);
 }
 
 .keyboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
 
+.ligne{
+    display: flex;
+    gap: 5px;
+    margin-bottom: 5px;
+}
+
+.key{
+    border: 1px solid white ;
+    transition: transform 0.5s ease;
+    width: 40px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.key:hover{
+    transform: scale(1.2);
+}
+
+#buttonReturn, #buttonEnter{
+    width: 85px;
+}
+
+.cyber-cursor {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--neon-blue);
+  border-radius: 50%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  box-shadow: 0 0 12px var(--neon-blue);
+  transform: translate(-50%, -50%);
+  transition:
+    transform 0.08s ease-out,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 }
