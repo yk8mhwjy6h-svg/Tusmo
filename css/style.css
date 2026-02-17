@@ -1,18 +1,77 @@
 :root {
-    --bg: #0a0a0f;
-    --card: #11111a;
-    --neon-pink: #ff2bdc;
-    --neon-blue: #00f6ff;
-    --text: #e6e6eb;
-    --muted: #9aa0a6;
-    --neon-yellow: #FFF300;
+  --bg: #0a0a0f;
+  --card: #11111a;
+  --neon-pink: #ff2bdc;
+  --neon-blue: #00f6ff;
+  --text: #e6e6eb;
+  --muted: #9aa0a6;
+  --neon-yellow: #FFF300;
 }
 
 body {
-    margin: 0;
-    Padding: 0;
-    font-family: 'Inter', sans-serif;
-    background-color: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
+  margin: 0;
+  Padding: 0;
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+  font-family: "Audiowide", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.skeleton {
+  display: none;
+}
+
+.logoTusmo {
+  display: flex;
+  box-shadow: #ff2bdc;
+  margin-left: 50px;
+
+
+}
+
+header {
+  display: flex;
+  font-size: 50px;
+  justify-content: center;
+  margin-top: 50px;
+
+}
+
+.letter {
+  color: var(--neon-blue);
+}
+
+.grid {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+
+
+}
+
+.grille {
+  display: flex;
+  justify-content: center;
+  width: 300px;
+  border: 1px solid #00f6ff;
+  margin-left: 50px;
+  margin-right: 50px;
+  
+}
+.cell {
+  width: 60px;
+  height: 60px;
+  border: 2px solid #00f6ff
+
+}
+
+.keyboard {
+
 }
