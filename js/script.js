@@ -39,10 +39,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if (compteur > 1) {
             compteur--;
             attempt.textContent = 'Tentatives restantes : ' + compteur;
-        } else {
+        } else if (compteur === 1) {
             compteur --;
             attempt.textContent = 'Tentatives restantes : ' + compteur;
             soundFail.play();
+        } else if (compteur === 0) {
+            return;
+        }{
         }
     });
 
