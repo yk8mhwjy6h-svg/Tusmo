@@ -46,7 +46,5 @@ const cursor = document.querySelector('.cyber-cursor');
         }
     });
 
-
-
 });
 
