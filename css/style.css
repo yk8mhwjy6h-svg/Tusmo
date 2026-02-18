@@ -12,7 +12,7 @@ body {
   margin: 0;
   Padding: 0;
   /* background-color: var(--bg); */
-  background-image: url("https://image.noelshack.com/fichiers/2026/08/2/1771341774-cyberpunl-fond-d-ecran-jpg.jpeg");
+  background-image: url("../assets/Paysage.avif");
   background-size: cover;
   color: var(--text);
   line-height: 1.6;
