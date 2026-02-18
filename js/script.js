@@ -34,11 +34,11 @@ document.addEventListener('DOMContentLoaded', function () {
     let currentRow = 0;
 
     function getCurrentCells() {
-        return rows[currentRow].querySelectorAll(".cell"); 
+        return rows[currentRow].querySelectorAll(".cell");
     }
 
     function addLetter(letter) {
-        const cells = getCurrentCells(); 
+        const cells = getCurrentCells();
         for (let i = 0; i < cells.length; i++) {
             if (cells[i].textContent.trim() === "") {
                 cells[i].textContent = letter;
@@ -75,13 +75,13 @@ document.addEventListener('DOMContentLoaded', function () {
         for (let i = 0; i < cells.length; i++) {
             if (cells[i].textContent.trim() === "") {
                 alert("Mot incomplet !");
-                return; // on sort sans valider
+                return false; // 👈 on renvoie false
             }
         }
 
         // Colorisation
         for (let i = 0; i < secret.length; i++) {
-            const lettre = cells[i].textContent.trim(); 
+            const lettre = cells[i].textContent.trim();
             if (lettre === secret[i]) {
                 cells[i].style.backgroundColor = "green";
             } else if (secret.includes(lettre)) {
@@ -91,9 +91,10 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        // Passe à la row suivante
         currentRow++;
+        return true;
     }
+
 
     // ---- Compteur de tentatives ----
     let compteur = 6;
@@ -104,15 +105,22 @@ document.addEventListener('DOMContentLoaded', function () {
     attempt.textContent = 'Tentatives restantes : ' + compteur;
 
     buttonEnter.addEventListener('click', function () {
+
         if (compteur > 0) {
-            checkWord(); // appel de la vérification
+
+            const isValid = checkWord();
+
+            if (!isValid) return;
+
             compteur--;
             attempt.textContent = 'Tentatives restantes : ' + compteur;
+
             if (compteur === 0) {
                 soundFail.play();
             }
         }
     });
+
 
     // ---- Listeners clavier ----
     del.addEventListener("click", function () {
