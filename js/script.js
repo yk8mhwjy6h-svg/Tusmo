@@ -27,6 +27,74 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // ---- Clavier ----
+    const keys = document.querySelectorAll(".key");
+    const del = document.querySelector("#buttonReturn");
+    const rows = document.querySelectorAll(".row");
+    let currentRow = 0;
+
+    function getCurrentCells() {
+        return rows[currentRow].querySelectorAll(".cell"); 
+    }
+
+    function addLetter(letter) {
+        const cells = getCurrentCells(); 
+        for (let i = 0; i < cells.length; i++) {
+            if (cells[i].textContent.trim() === "") {
+                cells[i].textContent = letter;
+                break;
+            }
+        }
+    }
+
+    function deleteLetter() {
+        const cells = getCurrentCells();
+        for (let i = cells.length - 1; i >= 0; i--) {
+            if (cells[i].textContent.trim() !== "") {
+                cells[i].textContent = "";
+                break;
+            }
+        }
+    }
+
+    // ---- Mot secret ----
+    const wordList = ["CHIEN", "BRAVE", "CRANE", "FROID", "CHAUD", "ROUGE", "GRACE", "ROUTE", "IDEAL", "JOKER"];
+
+    function getRandomWord() {
+        return wordList[Math.floor(Math.random() * wordList.length)];
+    }
+
+    const secret = getRandomWord();
+    console.log("Mot secret :", secret);
+
+    // ---- Vérification du mot ----
+    function checkWord() {
+        const cells = getCurrentCells();
+
+        // Vérifie que toutes les cells sont remplies
+        for (let i = 0; i < cells.length; i++) {
+            if (cells[i].textContent.trim() === "") {
+                alert("Mot incomplet !");
+                return; // on sort sans valider
+            }
+        }
+
+        // Colorisation
+        for (let i = 0; i < secret.length; i++) {
+            const lettre = cells[i].textContent.trim(); 
+            if (lettre === secret[i]) {
+                cells[i].style.backgroundColor = "green";
+            } else if (secret.includes(lettre)) {
+                cells[i].style.backgroundColor = "orange";
+            } else {
+                cells[i].style.backgroundColor = "red";
+            }
+        }
+
+        // Passe à la row suivante
+        currentRow++;
+    }
+
     // ---- Compteur de tentatives ----
     let compteur = 6;
     const attempt = document.getElementById("attempt");
@@ -36,76 +104,34 @@ document.addEventListener('DOMContentLoaded', function () {
     attempt.textContent = 'Tentatives restantes : ' + compteur;
 
     buttonEnter.addEventListener('click', function () {
-        if (compteur > 1) {
+        if (compteur > 0) {
+            checkWord(); // appel de la vérification
             compteur--;
             attempt.textContent = 'Tentatives restantes : ' + compteur;
-        } else if (compteur === 1) {
-            compteur--;
-            attempt.textContent = 'Tentatives restantes : ' + compteur;
-            soundFail.play();
-        } else if (compteur === 0) {
-            return;
-        } {
+            if (compteur === 0) {
+                soundFail.play();
+            }
         }
     });
-    const wordList = ["CHIEN", "BRAVE", "CRANE", "FROID", "CHAUD", "ROUGE", "GRACE", "ROUTE", "IDEAL", "JOKER"];
 
-    function getRandomWord() {
-        const index = Math.floor(Math.random() * wordList.length);
-        return wordList[index];
-        
-    }
-
-    const secret = getRandomWord();
-    console.log(secret)
-
-    // ---- Clavier ----
-    const keys = document.querySelectorAll(".key")
-    const del = document.querySelector("#buttonReturn")
-    const cells = [
-        document.querySelector(".cell1"),
-        document.querySelector(".cell2"),
-        document.querySelector(".cell3"),
-        document.querySelector(".cell4"),
-        document.querySelector(".cell5")
-    ]
-
-    function addLetter(letter) {
-        for (let i = 0; i < cells.length; i++) {
-            if (cells[i].innerText === "") {
-                cells[i].innerText = letter;
-                break;
-            }
-        }
-    }
-
-    function deleteLetter() {
-        for (let i = cells.length - 1; i >= 0; i--) {
-            if (cells[i].innerText !== "") {
-                cells[i].innerText = "";
-                break;
-            }
-        }
-    }
-
+    // ---- Listeners clavier ----
     del.addEventListener("click", function () {
         deleteLetter();
-    })
+    });
 
     keys.forEach(function (key) {
-        // on ignore buttonReturn et buttonEnter car ce sont des icônes
         if (key.id === "buttonReturn" || key.id === "buttonEnter") return;
         key.addEventListener("click", function () {
             addLetter(key.innerText.trim());
-        })
-    })
+        });
+    });
 
     document.addEventListener('keydown', function (e) {
         e.preventDefault();
         if (e.key === "Backspace") {
             deleteLetter();
         } else if (e.key === "Delete") {
-            cells.forEach(cell => cell.innerText = "");
+            getCurrentCells().forEach(cell => cell.textContent = ""); // "getCurrentCells()" au lieu de "cells"
         } else if (e.key === "Enter") {
             buttonEnter.click();
         } else {
@@ -119,6 +145,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 addLetter(e.key.toUpperCase());
             }
         }
-    })
+    });
 
 })
