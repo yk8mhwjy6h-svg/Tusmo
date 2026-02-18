@@ -36,10 +36,12 @@ document.addEventListener('DOMContentLoaded', function() {
     attempt.textContent = 'Tentatives restantes : ' + compteur;
 
     buttonEnter.addEventListener('click', function () {
-        if (compteur > 0) {
+        if (compteur > 1) {
             compteur--;
             attempt.textContent = 'Tentatives restantes : ' + compteur;
         } else {
+            compteur --;
+            attempt.textContent = 'Tentatives restantes : ' + compteur;
             soundFail.play();
         }
     });
