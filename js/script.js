@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
 
     // ---- Curseur personnalisé ----
     const cursor = document.querySelector('.cyber-cursor');
@@ -40,14 +40,24 @@ document.addEventListener('DOMContentLoaded', function() {
             compteur--;
             attempt.textContent = 'Tentatives restantes : ' + compteur;
         } else if (compteur === 1) {
-            compteur --;
+            compteur--;
             attempt.textContent = 'Tentatives restantes : ' + compteur;
             soundFail.play();
         } else if (compteur === 0) {
             return;
-        }{
+        } {
         }
     });
+    const wordList = ["CHIEN", "BRAVE", "CRANE", "FROID", "CHAUD", "ROUGE", "GRACE", "ROUTE", "IDEAL", "JOKER"];
+
+    function getRandomWord() {
+        const index = Math.floor(Math.random() * wordList.length);
+        return wordList[index];
+        
+    }
+
+    const secret = getRandomWord();
+    console.log(secret)
 
     // ---- Clavier ----
     const keys = document.querySelectorAll(".key")
@@ -100,10 +110,10 @@ document.addEventListener('DOMContentLoaded', function() {
             buttonEnter.click();
         } else {
             const allowedCharacters = [
-                "A","B","C","D","E","F","G","H","I","J","K","L","M",
-                "N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
-                "a","b","c","d","e","f","g","h","i","j","k","l","m",
-                "n","o","p","q","r","s","t","u","v","w","x","y","z"
+                "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
+                "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
+                "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
+                "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"
             ];
             if (allowedCharacters.includes(e.key)) {
                 addLetter(e.key.toUpperCase());
