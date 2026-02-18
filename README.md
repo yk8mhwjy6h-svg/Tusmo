@@ -9,7 +9,7 @@ Tâches à créer en JS :
 - Validation : Obliger l'utilisateur à saisir exactement 5 lettres et appartient à une liste de mots autorisés
 - Feedback visuel : Après validation, chaque case prend la couleur correspondante (vert/jaune/gris) avec une animation si possible
 - Fin de partie : Affichage d'un message de victoire ou de défaite, avec révélation du mot en cas d'échec
-- Nouvelle partie : Possibilité de rejour (nouveau mot du jour le lendemain, ou bouton "Rejouer" pour un mot aléatoire selon les choix techniques
+- Nouvelle partie : Possibilité de rejouer (nouveau mot du jour le lendemain, ou bouton "Rejouer" pour un mot aléatoire selon les choix techniques)
 
 (Fonctionnalités optionnelles)
 - Soundboard : S'occuper de la soundboard à l'ouverture de la page et lors du click pour valider le mot
