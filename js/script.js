@@ -24,3 +24,18 @@ document.querySelectorAll('a, button').forEach(el => {
         cursor.style.boxShadow = '0 0 12px var(--neon-blue)';
     });
 })
+
+
+
+// - Générateur : Générateur de mots de 5 lettres / Mot du jour : Un même mot pour tous les joueurs par jour (même mot pendant 24h, basé sur la date du jour) 
+
+const wordList = ['APPLE', 'BRAVE', 'CRANE', 'DREAM', 'EAGLE', 'FAITH', 'GRACE', 'HONEY', 'IDEAL', 'JOKER'];
+
+function getDailyWord() {
+    const today = new Date();
+    const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
+    return wordList[dayOfYear % wordList.length];
+}
+
+const dailyWord = getDailyWord();
+console.log('Mot du jour :', dailyWord);    
