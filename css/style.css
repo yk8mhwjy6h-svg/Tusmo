@@ -42,7 +42,7 @@ body > img {
   height: 100%;
   object-fit: cover;
   animation: visible 2s;
-  animation-delay: 12s;
+  animation-delay: 13s;
   animation-fill-mode: both;
 }
 
@@ -234,6 +234,28 @@ header {
   animation-fill-mode: both;
 }
 
+/*======================
+Titre 1 et 2
+======================== */
+
+.titre1 {
+    position: absolute;
+    font-size: 350%;
+    margin-top: 20vh;
+    color:#ff2bdc ;
+    z-index: 2;
+    animation: translate 15s ease-in forwards ;
+}
+.titre2
+{
+    position: absolute;
+    font-size: 350%;
+    margin-top: 35vh;
+    color: #00f6ff;
+    z-index: 2;
+    animation: translateA 15s ease-in forwards;
+}
+
 /* =====================
    KEYFRAMES
    ===================== */
@@ -257,4 +279,14 @@ header {
   25%  { opacity: 1; }
   75%  { opacity: 1; }
   100% { opacity: 0; }
+}
+@keyframes translate {
+    0% {transform: translateX(-30vw)}
+  50%{transform: translateX(110vw)}
+  100%{transform: translateX(-40vw)}
+}
+@keyframes translateA{
+  0% {transform: translateX(100vw)}
+  50% {transform: translateX(-50vw)}
+  100% {transform: translateX(100vW)}
 }
