@@ -209,5 +209,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const l = e.key.toUpperCase();
     if (l.length === 1 && l >= "A" && l <= "Z") addLetter(l);
   });
-
+  // ---- afficher la premiere lettre du mot secret ----
+  const firstLetter = secret[0];
+  const firstCell = getRowCells(0)[0];
+  firstCell.innerText = firstLetter;
+  firstCell.dataset.locked = "1";   
 });
