@@ -4,8 +4,9 @@ Tâches à créer en JS :
 
 Saisie du mot :
 - Afficher lettres sur la première ligne lors de la saisie sur clavier physique/virtuel => Validé
-- Afficher la première lettre du mot dans la première ligne
-- Au prochain tour, les lettres validés doivent se mettre au même endroit sur la prochaine ligne (Simon)
+- Afficher la première lettre du mot dans la première ligne => Validé
+- Au prochain tour, les lettres validés doivent se mettre au même endroit sur la prochaine ligne => Validé
+- Gérer le bug d'affichage avec la lettre qui reste jaune alors qu'elle a été validé en vert
 
 Générateur :
 - Générer un mot aléatoire => Validé
@@ -31,8 +32,8 @@ Nouvelle partie :
 
 Soundboard : 
 - S'occuper de la soundboard lors de l'apparition du skeleton (Julien)
-- S'occuper de la soundboard lors du click pour valider le mot
-- S'occuper de la soundboard lorsque l'utilisateur a trouvé le bon mot (Jérôme)
+- S'occuper de la soundboard lors du click pour valider le mot => Validé
+- S'occuper de la soundboard lorsque l'utilisateur a trouvé le bon mot => Validé
 
 
 Tâches à effectuer en CSS :

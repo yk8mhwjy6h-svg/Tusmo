@@ -74,6 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const attempt = document.getElementById("attempt");
   const soundFail = new Audio("assets/soundfail.mp3");
   const soundWin = new Audio("assets/soundWin.mp3");
+  const soundFault = new Audio("assets/soundfault.mp3");
   attempt.textContent = "Tentatives restantes : " + compteur;
 
   // ---- Etat ----
@@ -129,18 +130,22 @@ document.addEventListener("DOMContentLoaded", function () {
   function rowIsFull() {
     const rowCells = getRowCells(currentRow);
     for (let i = 0; i < WORD_LENGTH; i++) {
-      if (rowCells[i].innerText === "") return false;
+      if (rowCells[i].innerText === "") {
+        alert("Vous devez insérer 5 lettres !");
+        return;}
     }
     return true;
   }
 
-  function colorRowAndGetCorrect() {
+  function colorRowAndGetCorrect(suppressFaultSound = false) {
     const rowCells = getRowCells(currentRow);
     const correctLetters = Array(WORD_LENGTH).fill("");
 
     for (let i = 0; i < WORD_LENGTH; i++) {
       const letter = rowCells[i].innerText;
-
+      if (!suppressFaultSound) {
+        soundFault.play();
+      }
       rowCells[i].classList.remove("correct", "present", "absent");
 
       if (letter === secret[i]) {
@@ -175,8 +180,10 @@ document.addEventListener("DOMContentLoaded", function () {
   
   function submitRow() {
     if (!rowIsFull()) return;
+
+    const suppressFault = (compteur === 1);
     
-    const correctLetters = colorRowAndGetCorrect();
+    const correctLetters = colorRowAndGetCorrect(suppressFault);
     const guess = Array.from(getRowCells(currentRow)).map(c => c.innerText).join("");
     //   si la ligne est verte, le joueur a gagné et on envoie un message de félicitations.
      if (guess === secret) {
