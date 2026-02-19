@@ -106,6 +106,8 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
+    color: var(--neon-yellow);
+    
 }
 
 .key:hover{
@@ -140,3 +142,7 @@ header {
   right: 5%;
   color: var(--text);
 }
+
+.cell.correct { background: #28d45c; }
+.cell.present { background: #fff300; color: #000; }
+.cell.absent  { background: #2a2a35; color: #bbb; }
