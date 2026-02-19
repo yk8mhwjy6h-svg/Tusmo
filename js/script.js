@@ -178,7 +178,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
     const correctLetters = colorRowAndGetCorrect();
     const guess = Array.from(getRowCells(currentRow)).map(c => c.innerText).join("");
-    //   si la ligne est verte, le joueur a gagné et on envoie un message de félicitations. Sinon, on décrémente le compteur et on passe à la ligne suivante.
+    //   si la ligne est verte, le joueur a gagné et on envoie un message de félicitations.
      if (guess === secret) {
        soundWin.play();
        alert("Félicitations ! Vous avez trouvé le mot secret !");
