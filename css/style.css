@@ -60,7 +60,7 @@ header {
   margin-top: 20px;
 }
 
-.grille {
+.row {
   display: flex;
   justify-content: center;
   width: 250px;
