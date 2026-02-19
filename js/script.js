@@ -168,7 +168,11 @@ document.addEventListener("DOMContentLoaded", function () {
   function submitRow() {
     if (!rowIsFull()) return;
 
-    const guess = Array.from(getRowCells(currentRow)).map(c => c.innerText).join("");
+    // Récupère toutes les cellules et extrait les lettres puis forme le mot deviné
+    const rowCells = getRowCells(currentRow);
+    const letters = Array.from(rowCells).map(c => c.innerText);
+    const guess = letters.join("");
+
     const isWinner = (guess === secret);
 
     const correctLetters = colorRowAndGetCorrect(isWinner);
