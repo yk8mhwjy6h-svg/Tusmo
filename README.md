@@ -3,7 +3,7 @@
 Tâches à créer en JS :
 
 Saisie du mot :
-- Afficher lettres sur la première ligne lors de la saisie sur clavier physique/virtuel ====================> Validé
+- Afficher lettres sur la première ligne lors de la saisie sur clavier physique/virtuel => Validé
 - Afficher la première lettre du mot dans la première ligne
 - Au prochain tour, les lettres validés doivent se mettre au même endroit sur la prochaine ligne (Simon)
 
