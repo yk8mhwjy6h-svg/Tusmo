@@ -73,6 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let compteur = 6;
   const attempt = document.getElementById("attempt");
   const soundFail = new Audio("assets/soundfail.mp3");
+  const soundWin = new Audio("assets/soundWin.mp3");
   attempt.textContent = "Tentatives restantes : " + compteur;
 
   // ---- Etat ----
@@ -171,13 +172,19 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  
   function submitRow() {
     if (!rowIsFull()) return;
-
+    
     const correctLetters = colorRowAndGetCorrect();
     const guess = Array.from(getRowCells(currentRow)).map(c => c.innerText).join("");
-    if (guess === secret) return; 
-
+    //   si la ligne est verte, le joueur a gagné et on envoie un message de félicitations. Sinon, on décrémente le compteur et on passe à la ligne suivante.
+     if (guess === secret) {
+       soundWin.play();
+       alert("Félicitations ! Vous avez trouvé le mot secret !");
+       return;
+     } 
+    
     // compteur
     compteur--;
     attempt.textContent = "Tentatives restantes : " + compteur;
