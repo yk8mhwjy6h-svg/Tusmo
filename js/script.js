@@ -177,35 +177,35 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+function submitRow() {
+  if (!rowIsFull()) return;
+
+  const guess = Array.from(getRowCells(currentRow)).map(c => c.innerText).join("");
+  const isWinner = (guess === secret);
   
-  function submitRow() {
-    if (!rowIsFull()) return;
-
-    const suppressFault = (compteur === 1);
-    
-    const correctLetters = colorRowAndGetCorrect(suppressFault);
-    const guess = Array.from(getRowCells(currentRow)).map(c => c.innerText).join("");
-    //   si la ligne est verte, le joueur a gagné et on envoie un message de félicitations.
-     if (guess === secret) {
-       soundWin.play();
-       alert("Félicitations ! Vous avez trouvé le mot secret !");
-       return;
-     } 
-    
-    // compteur
-    compteur--;
-    attempt.textContent = "Tentatives restantes : " + compteur;
-
-    if (compteur <= 0) {
-      soundFail.play();
-      return;
-    }
-    applyCorrectToNextRow(correctLetters);
-
-    // ligne suivante
-    currentRow++;
-    currentCol = moveToNextFreeCol();
+  const correctLetters = colorRowAndGetCorrect(isWinner);
+  
+  if (isWinner) {
+    soundWin.play();
+    return;
   }
+
+  // compteur
+  compteur--;
+  attempt.textContent = "Tentatives restantes : " + compteur;
+
+  if (compteur <= 0) {
+    soundFail.play();
+    return;
+  }
+
+  applyCorrectToNextRow(correctLetters);
+
+  // ligne suivante
+  currentRow++;
+  currentCol = moveToNextFreeCol();
+}
+
 
   // ---- Events ----
   del.addEventListener("click", deleteLetter);
