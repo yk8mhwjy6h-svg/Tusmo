@@ -124,16 +124,12 @@ document.addEventListener("DOMContentLoaded", function () {
     return true;
   }
 
-  function colorRowAndGetCorrect(suppressFaultSound = false) {
+  function colorRowAndGetCorrect() {
     const rowCells = getRowCells(currentRow);
     const correctLetters = Array(WORD_LENGTH).fill("");
 
     for (let i = 0; i < WORD_LENGTH; i++) {
       const letter = rowCells[i].innerText;
-
-      if (!suppressFaultSound) {
-        soundFault.play();
-      }
 
       rowCells[i].classList.remove("correct", "present", "absent");
 
@@ -175,7 +171,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const isWinner = (guess === secret);
 
-    const correctLetters = colorRowAndGetCorrect(isWinner);
+    const correctLetters = colorRowAndGetCorrect();
 
     if (isWinner) {
       soundWin.play();
@@ -188,9 +184,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (compteur <= 0) {
       soundFail.play();
+      alert("Dommage ! Le mot secret était : " + secret);
       return;
     }
 
+    // Si ce n'est pas gagné ni perdu, son d'erreur normal
+    soundFault.play();
+    
     applyCorrectToNextRow(correctLetters);
     currentRow++;
     currentCol = moveToNextFreeCol();
