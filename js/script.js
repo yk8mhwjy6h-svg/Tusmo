@@ -65,6 +65,8 @@ document.addEventListener("DOMContentLoaded", function () {
     return WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)].toUpperCase();
   }
 
+  const AuthorizedWords = new Set(WORD_LIST);
+
   let secret = getRandomWord();
   console.log("secret:", secret);
 
@@ -72,7 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let currentCol = 0;
   let compteur = 6;
 
-  // ✅ init : toutes les cases non verrouillées par défaut
+  // init : toutes les cases non verrouillées par défaut
   document.querySelectorAll(".cell").forEach(cell => {
     cell.dataset.locked = "0";
   });
@@ -238,6 +240,26 @@ function colorRowAndGetCorrect() {
     const rowCells = getRowCells(currentRow);
     const letters = Array.from(rowCells).map(c => c.innerText);
     const guess = letters.join("");
+
+    // Vérifie si le mot deviné est dans la liste des mots autorisés
+    if (!AuthorizedWords.has(guess)) {
+      alert("Mot non reconnu !");
+      // Efface automatiquement les lettres non verrouillées de la ligne
+      rowCells.forEach(cell => {
+        if (cell.dataset.locked !== "1") {
+          cell.classList.remove("correct", "present", "absent");
+          cell.innerText = "";
+        }
+      });
+      // Remet le curseur à la deuxième case (index 1). Si elle est verrouillée,
+      // place le curseur sur la prochaine case libre.
+      if (rowCells[1] && rowCells[1].dataset.locked !== "1") {
+        currentCol = 1;
+      } else {
+        currentCol = moveToNextFreeCol();
+      }
+      return;
+    }
 
     const isWinner = (guess === secret);
 

@@ -287,7 +287,7 @@ Titre 1 et 2
 /* =====================
    KEYFRAMES
    ===================== */
-/* @keyframes load { */
+@keyframes load {
   from {
     width: 0%;
   }
@@ -295,9 +295,9 @@ Titre 1 et 2
   to {
     width: 100%;
   }
-/* } */
+}
 
-/* @keyframes disparaitre { */
+@keyframes disparaitre {
 
   0%,
   98% {
@@ -308,9 +308,9 @@ Titre 1 et 2
     opacity: 0;
     visibility: hidden;
   }
-/* } */
+}
 
-/* @keyframes visible { */
+@keyframes visible {
 
   0%,
   75% {
@@ -320,9 +320,9 @@ Titre 1 et 2
   100% {
     opacity: 1;
   }
-/* } */
+}
 
-/* @keyframes becaro { */
+@keyframes becaro {
   0% {
     opacity: 0;
   }
@@ -338,9 +338,9 @@ Titre 1 et 2
   100% {
     opacity: 0;
   }
-/* } */
+}
 
-/* @keyframes translate { */
+@keyframes translate {
   0% {
     transform: translateX(-30vw)
   }
@@ -352,9 +352,9 @@ Titre 1 et 2
   100% {
     transform: translateX(-40vw)
   }
-/* } */
+}
 
-/* @keyframes translateA { */
+@keyframes translateA {
   0% {
     transform: translateX(100vw)
   }
@@ -367,7 +367,7 @@ Titre 1 et 2
     transform: translateX(100vw);
     display: none
   }
-/* } */
+}
 #restartBtn{
   margin: 16px auto 0;
   padding: 12px 18px;
