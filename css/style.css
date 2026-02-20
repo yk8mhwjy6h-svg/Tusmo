@@ -241,7 +241,7 @@ Titre 1 et 2
 .titre1 {
     position: absolute;
     font-size: 350%;
-    margin-top: 20vh;
+    top: 18vh;
     color:#ff2bdc ;
     z-index: 2;
     animation: translate 15s ease-in forwards ;
@@ -250,7 +250,7 @@ Titre 1 et 2
 {
     position: absolute;
     font-size: 350%;
-    margin-top: 35vh;
+    top: 35vh;
     color: #00f6ff;
     z-index: 2;
     animation: translateA 15s ease-in forwards;
@@ -288,5 +288,5 @@ Titre 1 et 2
 @keyframes translateA{
   0% {transform: translateX(100vw)}
   50% {transform: translateX(-50vw)}
-  100% {transform: translateX(100vW)}
+  100% {transform: translateX(100vW); display:none}
 }
