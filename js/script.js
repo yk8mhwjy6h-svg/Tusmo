@@ -30,8 +30,8 @@ document.addEventListener("DOMContentLoaded", function () {
     "RADAR", "RAIDE", "RARES", "RAYON", "REGLE", "REINE", "RENDU", "REPAS", "RESTE", "REVES",
     "RIVEE", "ROBOT", "ROUGE", "ROUTE", "RUGIR", "SABLE", "SALON", "SAUTE", "SAVON", "SCENE",
     "SEUIL", "SIGNE", "SOLDE", "SONDE", "SORTI", "SOUCI", "SPORT", "STOCK", "STYLE", "SUCRE",
-    "SUJET", "SUPER", "TABLE", "TACHE", "TARIF", "TEMPS", "TEXTE", "THEME", "TIGRE", "TIRER", 
-    "TITRE", "TRACE", "TRAIN", "TRAME", "TRIER", "TROIS", "USAGE", "VENTE", "VERRE", "VIEUX", 
+    "SUJET", "SUPER", "TABLE", "TACHE", "TARIF", "TEMPS", "TEXTE", "THEME", "TIGRE", "TIRER",
+    "TITRE", "TRACE", "TRAIN", "TRAME", "TRIER", "TROIS", "USAGE", "VENTE", "VERRE", "VIEUX",
     "VILLE", "VIRUS", "VITAL", "VIVRE", "VOILE", "VOTER"
   ];
 
@@ -60,6 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const secret = WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)].toUpperCase();
   console.log("secret:", secret);
+  const AuthorizedWords = new Set(WORD_LIST);
 
   let currentRow = 0;
   let currentCol = 0;
@@ -166,6 +167,26 @@ document.addEventListener("DOMContentLoaded", function () {
     const rowCells = getRowCells(currentRow);
     const letters = Array.from(rowCells).map(c => c.innerText);
     const guess = letters.join("");
+
+    // Vérifie si le mot deviné est dans la liste des mots autorisés
+    if (!AuthorizedWords.has(guess)) {
+      alert("Mot non reconnu !");
+      // Efface automatiquement les lettres non verrouillées de la ligne
+      rowCells.forEach(cell => {
+        if (cell.dataset.locked !== "1") {
+          cell.classList.remove("correct", "present", "absent");
+          cell.innerText = "";
+        }
+      });
+      // Remet le curseur à la deuxième case (index 1). Si elle est verrouillée,
+      // place le curseur sur la prochaine case libre.
+      if (rowCells[1] && rowCells[1].dataset.locked !== "1") {
+        currentCol = 1;
+      } else {
+        currentCol = moveToNextFreeCol();
+      }
+      return;
+    }
 
     const isWinner = (guess === secret);
 
