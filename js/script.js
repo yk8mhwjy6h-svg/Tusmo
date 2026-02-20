@@ -45,6 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const enter = document.getElementById("buttonEnter");
   const attempt = document.getElementById("attempt");
   const cursor = document.querySelector(".cyber-cursor");
+  const restartBtn = document.getElementById("restartBtn");
 
   // ============================================================
   // AUDIO
@@ -58,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // ÉTAT DU JEU
   // ============================================================
 
-  const secret = WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)].toUpperCase();
+  let secret = WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)].toUpperCase();
   console.log("secret:", secret);
 
   let currentRow = 0;
@@ -253,4 +254,24 @@ document.addEventListener("DOMContentLoaded", function () {
   const firstCell = getRowCells(0)[0];
   firstCell.innerText = firstLetter;
   firstCell.dataset.locked = "1";
+
+  function resetGame() {
+  // nouveau mot
+  secret = getRandomWord();
+  console.log("Nouveau secret:", secret); // debug
+
+  // reset état
+  currentRow = 0;
+  currentCol = 0;
+  compteur = 6;
+  attempt.textContent = "Tentatives restantes : " + compteur;
+  }
+  // vider la grille + enlever couleurs + déverrouiller
+  document.querySelectorAll(".cell").forEach(cell => {
+      cell.innerText = "";
+      cell.classList.remove("correct", "present", "absent");
+      cell.dataset.locked = "0";
+    });
+    restartBtn.addEventListener("click", resetGame);
+
 });
