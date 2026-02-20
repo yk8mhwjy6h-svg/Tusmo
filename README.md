@@ -29,7 +29,7 @@ Feedback visuel :
 - Après validation, chaque case prend la couleur correspondante avec une animation
 
 Fin de partie : 
-- Affichage d'un message de victoire ou de défaite, avec révélation du mot en cas d'échec (Jérôme)
+- Affichage d'un message de victoire ou de défaite, avec révélation du mot en cas d'échec => Validé
 
 Nouvelle partie : 
 - Possibilité de rejouer (nouveau mot du jour le lendemain, ou bouton "Rejouer" pour un mot aléatoire selon les choix techniques)
@@ -38,7 +38,7 @@ Soundboard :
 - S'occuper de la soundboard lors de l'apparition du skeleton (Julien)
 - S'occuper de la soundboard lors du click pour valider le mot => Validé
 - S'occuper de la soundboard lorsque l'utilisateur a trouvé le bon mot => Validé
-- Gérer le problème de son lorsque l'utilisateur épuise ses tentatives (SoundFail et SoundFault sont joués en même temps) => Jérôme
+- Gérer le problème de son lorsque l'utilisateur épuise ses tentatives (SoundFail et SoundFault sont joués en même temps) => Validé
 
 
 Tâches à effectuer en CSS :
