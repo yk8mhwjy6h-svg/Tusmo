@@ -6,33 +6,33 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const WORD_LENGTH = 5;
   const WORD_LIST = [
-    "ABIME", "ABORD", "ABRIT", "ACIER", "AGILE", "AIDER", "AIMER", "AINSI", "AJOUT", "ALBUM",
-    "ALERT", "ALGUE", "ALIAS", "AMOUR", "ANGLE", "ANIME", "APPEL", "ARBRE", "ARRET", "ATOME",
-    "AVION", "AVRIL", "BAGUE", "BANJO", "BARBE", "BARON", "BASSE", "BATTE", "BATTU", "BEIGE",
-    "BETON", "BIERE", "BILAN", "BILLE", "BLANC", "BLOND", "BOIRE", "BOITE", "BOMBE", "BORDS",
-    "BOULE", "BRAVE", "BRUIT", "CABLE", "CADRE", "CALME", "CANAL", "CARTE", "CASSE", "CAUSE",
-    "CHAIR", "CHAMP", "CHANT", "CHAUD", "CHIEN", "CHOIR", "CHUTE", "CLAIR", "CLONE", "CLOWN",
-    "COEUR", "COLLE", "CONTE", "COMTE", "COUPE", "COURT", "CRAIE", "CRANE", "CREER", "CRISE",
-    "CROIX", "DANSE", "DEBUT", "DELTA", "DEMON", "DEPOT", "DEVIN", "DOUTE", "DRAME", "DRAPE",
-    "DROIT", "ECLAT", "ECRAN", "ECRIT", "EFFET", "EGOUT", "ELITE", "EMAIL", "ENFER", "ENVOI",
-    "EPAIS", "ETAPE", "ETUDE", "EXACT", "EXCES", "FACON", "FAIRE", "FAUTE", "FEMME", "FICHE",
-    "FINAL", "FIXER", "FONCE", "FORCE", "FOULE", "FRAIS", "FROID", "FUMEE", "FUTUR", "GALET",
-    "GAMIN", "GANTS", "GARDE", "GENRE", "GESTE", "GLOBE", "GRACE", "GRAIN", "GRAND", "GRAVE",
-    "GUIDE", "HABIT", "HUMAN", "IDEAL", "IMAGE", "ISSUE", "JAMBE", "JEUNE", "JOLIE", "JOUER",
-    "JUIFS", "JURER", "JUSTE", "LARGE", "LASER", "LEGER", "LIGNE", "LIVRE", "LOCAL", "LOGER",
-    "LUMEN", "LUTTE", "MAGIE", "MAINS", "MAIRE", "MAJOR", "MAMAN", "MARGE", "MARIN", "MASSE",
-    "MATCH", "MATIN", "METAL", "MINCE", "MODEM", "MOINS", "MONDE", "MORAL", "MOTIF", "MOULE",
-    "NAIVE", "NAGER", "NEIGE", "NIVEA", "NOEUD", "NOIRE", "NOMME", "NORDS", "NOTER", "NUAGE",
-    "OBJET", "OCEAN", "OMBRE", "ONCLE", "OPERA", "ORDRE", "ORGUE", "OTAGE", "OUBLI", "OUIES",
-    "PAIRE", "PAINS", "PANEL", "PARIS", "PARLE", "PARTI", "PASSE", "PATCH", "PAUSE", "PERTE",
-    "PETIT", "PHOTO", "PIECE", "PISTE", "PLAGE", "PLEIN", "PLUME", "POCHE", "POIDS", "POINT",
-    "PORTE", "POSEE", "POUCE", "PRIME", "PROIE", "PROSE", "PULSE", "QUAND", "QUART", "QUOTA",
-    "RADAR", "RAIDE", "RARES", "RAYON", "REGLE", "REINE", "RENDU", "REPAS", "RESTE", "REVES",
-    "RIVEE", "ROBOT", "ROUGE", "ROUTE", "RUGIR", "SABLE", "SALON", "SAUTE", "SAVON", "SCENE",
-    "SEUIL", "SIGNE", "SOLDE", "SONDE", "SORTI", "SOUCI", "SPORT", "STOCK", "STYLE", "SUCRE",
-    "SUJET", "SUPER", "TABLE", "TACHE", "TARIF", "TEMPS", "TEXTE", "THEME", "TIGRE", "TIRER",
-    "TITRE", "TRACE", "TRAIN", "TRAME", "TRIER", "TROIS", "USAGE", "VENTE", "VERRE", "VIEUX",
-    "VILLE", "VIRUS", "VITAL", "VIVRE", "VOILE", "VOTER"
+    "ABIME","ABORD","ABRIT","ACIER","AGILE","AIDER","AIMER","AINSI","AJOUT","ALBUM",
+    "ALERT","ALGUE","ALIAS","AMOUR","ANGLE","ANIME","APPEL","ARBRE","ARRET","ATOME",
+    "AVION","AVRIL","BAGUE","BANJO","BARBE","BARON","BASSE","BATTE","BATTU","BEIGE",
+    "BETON","BIERE","BILAN","BILLE","BLANC","BLOND","BOIRE","BOITE","BOMBE","BORDS",
+    "BOULE","BRAVE","BRUIT","CABLE","CADRE","CALME","CANAL","CARTE","CASSE","CAUSE",
+    "CHAIR","CHAMP","CHANT","CHAUD","CHIEN","CHOIR","CHUTE","CLAIR","CLONE","CLOWN",
+    "COEUR","COLLE","CONTE","COMTE","COUPE","COURT","CRAIE","CRANE","CREER","CRISE",
+    "CROIX","DANSE","DEBUT","DELTA","DEMON","DEPOT","DEVIN","DOUTE","DRAME","DRAPE",
+    "DROIT","ECLAT","ECRAN","ECRIT","EFFET","EGOUT","ELITE","EMAIL","ENFER","ENVOI",
+    "EPAIS","ETAPE","ETUDE","EXACT","EXCES","FACON","FAIRE","FAUTE","FEMME","FICHE",
+    "FINAL","FIXER","FONCE","FORCE","FOULE","FRAIS","FROID","FUMEE","FUTUR","GALET",
+    "GAMIN","GANTS","GARDE","GENRE","GESTE","GLOBE","GRACE","GRAIN","GRAND","GRAVE",
+    "GUIDE","HABIT","HUMAN","IDEAL","IMAGE","ISSUE","JAMBE","JEUNE","JOLIE","JOUER",
+    "JUIFS","JURER","JUSTE","LARGE","LASER","LEGER","LIGNE","LIVRE","LOCAL","LOGER",
+    "LUMEN","LUTTE","MAGIE","MAINS","MAIRE","MAJOR","MAMAN","MARGE","MARIN","MASSE",
+    "MATCH","MATIN","METAL","MINCE","MODEM","MOINS","MONDE","MORAL","MOTIF","MOULE",
+    "NAIVE","NAGER","NEIGE","NIVEA","NOEUD","NOIRE","NOMME","NORDS","NOTER","NUAGE",
+    "OBJET","OCEAN","OMBRE","ONCLE","OPERA","ORDRE","ORGUE","OTAGE","OUBLI","OUIES",
+    "PAIRE","PAINS","PANEL","PARIS","PARLE","PARTI","PASSE","PATCH","PAUSE","PERTE",
+    "PETIT","PHOTO","PIECE","PISTE","PLAGE","PLEIN","PLUME","POCHE","POIDS","POINT",
+    "PORTE","POSEE","POUCE","PRIME","PROIE","PROSE","PULSE","QUAND","QUART","QUOTA",
+    "RADAR","RAIDE","RARES","RAYON","REGLE","REINE","RENDU","REPAS","RESTE","REVES",
+    "RIVEE","ROBOT","ROUGE","ROUTE","RUGIR","SABLE","SALON","SAUTE","SAVON","SCENE",
+    "SEUIL","SIGNE","SOLDE","SONDE","SORTI","SOUCI","SPORT","STOCK","STYLE","SUCRE",
+    "SUJET","SUPER","TABLE","TACHE","TARIF","TEMPS","TEXTE","THEME","TIGRE","TIRER",
+    "TITRE","TRACE","TRAIN","TRAME","TRIER","TROIS","USAGE","VENTE","VERRE","VIEUX",
+    "VILLE","VIRUS","VITAL","VIVRE","VOILE","VOTER"
   ];
 
   // ============================================================
@@ -45,6 +45,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const enter = document.getElementById("buttonEnter");
   const attempt = document.getElementById("attempt");
   const cursor = document.querySelector(".cyber-cursor");
+
+  // bouton restart 
   const restartBtn = document.getElementById("restartBtn");
 
   // ============================================================
@@ -59,13 +61,21 @@ document.addEventListener("DOMContentLoaded", function () {
   // ÉTAT DU JEU
   // ============================================================
 
-  let secret = WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)].toUpperCase();
+  function getRandomWord() {
+    return WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)].toUpperCase();
+  }
+
+  let secret = getRandomWord();
   console.log("secret:", secret);
-  const AuthorizedWords = new Set(WORD_LIST);
 
   let currentRow = 0;
   let currentCol = 0;
   let compteur = 6;
+
+  // ✅ init : toutes les cases non verrouillées par défaut
+  document.querySelectorAll(".cell").forEach(cell => {
+    cell.dataset.locked = "0";
+  });
 
   // ============================================================
   // FONCTIONS UTILITAIRES
@@ -164,30 +174,9 @@ document.addEventListener("DOMContentLoaded", function () {
   function submitRow() {
     if (!rowIsFull()) return;
 
-    // Récupère toutes les cellules et extrait les lettres puis forme le mot deviné
     const rowCells = getRowCells(currentRow);
     const letters = Array.from(rowCells).map(c => c.innerText);
     const guess = letters.join("");
-
-    // Vérifie si le mot deviné est dans la liste des mots autorisés
-    if (!AuthorizedWords.has(guess)) {
-      alert("Mot non reconnu !");
-      // Efface automatiquement les lettres non verrouillées de la ligne
-      rowCells.forEach(cell => {
-        if (cell.dataset.locked !== "1") {
-          cell.classList.remove("correct", "present", "absent");
-          cell.innerText = "";
-        }
-      });
-      // Remet le curseur à la deuxième case (index 1). Si elle est verrouillée,
-      // place le curseur sur la prochaine case libre.
-      if (rowCells[1] && rowCells[1].dataset.locked !== "1") {
-        currentCol = 1;
-      } else {
-        currentCol = moveToNextFreeCol();
-      }
-      return;
-    }
 
     const isWinner = (guess === secret);
 
@@ -208,7 +197,6 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // Si ce n'est pas gagné ni perdu, son d'erreur normal
     soundFault.play();
 
     applyCorrectToNextRow(correctLetters);
@@ -244,6 +232,39 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
+  // BOUTON RECOMMENCER 
+
+  function resetGame() {
+    // nouveau mot
+    secret = getRandomWord();
+    console.log("Nouveau secret:", secret);
+
+    // reset état
+    currentRow = 0;
+    compteur = 6;
+
+    // vider la grille + enlever couleurs + déverrouiller
+    document.querySelectorAll(".cell").forEach(cell => {
+      cell.innerText = "";
+      cell.classList.remove("correct", "present", "absent");
+      cell.dataset.locked = "0";
+    });
+
+    // remettre la 1ère lettre (motus)
+    const firstLetter = secret[0];
+    const firstCell = getRowCells(0)[0];
+    firstCell.innerText = firstLetter;
+    firstCell.dataset.locked = "1";
+
+    // remise de la position de saisie + affichage tentatives
+    currentCol = moveToNextFreeCol();
+    attempt.textContent = "Tentatives restantes : " + compteur;
+  }
+
+  if (restartBtn) {
+    restartBtn.addEventListener("click", resetGame);
+  }
+
   // ============================================================
   // ÉVÉNEMENTS
   // ============================================================
@@ -268,7 +289,6 @@ document.addEventListener("DOMContentLoaded", function () {
   // INITIALISATION
   // ============================================================
 
-  currentCol = moveToNextFreeCol();
   attempt.textContent = "Tentatives restantes : " + compteur;
 
   const firstLetter = secret[0];
@@ -276,23 +296,5 @@ document.addEventListener("DOMContentLoaded", function () {
   firstCell.innerText = firstLetter;
   firstCell.dataset.locked = "1";
 
-  function resetGame() {
-  // nouveau mot
-  secret = getRandomWord();
-  console.log("Nouveau secret:", secret); // debug
-
-  // reset état
-  currentRow = 0;
-  currentCol = 0;
-  compteur = 6;
-  attempt.textContent = "Tentatives restantes : " + compteur;
-  }
-  // vider la grille + enlever couleurs + déverrouiller
-  document.querySelectorAll(".cell").forEach(cell => {
-      cell.innerText = "";
-      cell.classList.remove("correct", "present", "absent");
-      cell.dataset.locked = "0";
-    });
-    restartBtn.addEventListener("click", resetGame);
-
+  currentCol = moveToNextFreeCol();
 });
