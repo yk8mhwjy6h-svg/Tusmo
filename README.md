@@ -15,7 +15,7 @@ Saisie du mot :
 Générateur :
 - Générer un mot aléatoire => Validé
 - Augmenter la taille de la liste => Validé
-- Faire un tri dans les mots => Jérôme
+- Faire un tri dans les mots => Validé
 - Faire en sorte que ce soit le même mot pendant 24h (Optionnel)
 
 Grille de jeu :
