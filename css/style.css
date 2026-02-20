@@ -33,7 +33,7 @@ body {
 /* =====================
    IMAGE DE FOND
    ===================== */
-body > img {
+body>img {
   position: fixed;
   top: 0;
   left: 0;
@@ -105,9 +105,19 @@ header {
   animation: neonPulse 1.8s ease-in-out infinite;
 }
 
-.cell.correct { background: #28d45c; }
-.cell.present { background: #fff300; color: #000; }
-.cell.absent  { background: #2a2a35; color: #bbb; }
+.cell.correct {
+  background: #28d45c;
+}
+
+.cell.present {
+  background: #fff300;
+  color: #000;
+}
+
+.cell.absent {
+  background: #2a2a35;
+  color: #bbb;
+}
 
 /* =====================
    CLAVIER
@@ -239,55 +249,109 @@ header {
 Titre 1 et 2
 ======================== */
 
-.titre1 {
-    position: absolute;
-    font-size: 350%;
-    top: 18vh;
-    color:#ff2bdc ;
-    z-index: 2;
-    animation: translate 15s ease-in forwards ;
+#titre1 {
+  position: fixed;
+
+  font-size: 350%;
+  top: 25%;
+  color: #ff2bdc;
+  z-index: 2;
+  animation: translate 15s ease-in forwards;
+
 }
-.titre2
-{
-    position: absolute;
-    font-size: 350%;
-    top: 35vh;
-    color: #00f6ff;
-    z-index: 2;
-    animation: translateA 15s ease-in forwards;
+
+#titre2 {
+  position: fixed;
+  left: 0;
+  font-size: 350%;
+  bottom: 25%;
+  color: #00f6ff;
+  z-index: 2;
+  animation: translateA 15s ease-in forwards;
+
 }
 
 /* =====================
    KEYFRAMES
    ===================== */
 @keyframes load {
-  from { width: 0%; }
-  to   { width: 100%; }
+  from {
+    width: 0%;
+  }
+
+  to {
+    width: 100%;
+  }
 }
 
 @keyframes disparaitre {
-  0%, 98% { opacity: 1; }
-  100%     { opacity: 0; visibility: hidden; }
+
+  0%,
+  98% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
 }
 
 @keyframes visible {
-  0%, 75% { opacity: 0; }
-  100%     { opacity: 1; }
+
+  0%,
+  75% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes becaro {
-  0%   { opacity: 0; }
-  25%  { opacity: 1; }
-  75%  { opacity: 1; }
-  100% { opacity: 0; }
+  0% {
+    opacity: 0;
+  }
+
+  25% {
+    opacity: 1;
+  }
+
+  75% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
+
 @keyframes translate {
-    0% {transform: translateX(-30vw)}
-  50%{transform: translateX(110vw)}
-  100%{transform: translateX(-40vw)}
+  0% {
+    transform: translateX(-30vw)
+  }
+
+  50% {
+    transform: translateX(110vw)
+  }
+
+  100% {
+    transform: translateX(-40vw)
+  }
 }
-@keyframes translateA{
-  0% {transform: translateX(100vw)}
-  50% {transform: translateX(-50vw)}
-  100% {transform: translateX(100vW); display:none}
+
+@keyframes translateA {
+  0% {
+    transform: translateX(100vw)
+  }
+
+  50% {
+    transform: translateX(-50vw)
+  }
+
+  100% {
+    transform: translateX(100vw);
+    display: none
+  }
 }
