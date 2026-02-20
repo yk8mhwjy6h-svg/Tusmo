@@ -6,9 +6,10 @@
   --card: #11111a;
   --neon-pink: #ff2bdc;
   --neon-blue: #00f6ff;
+  --neon-yellow: #FFF300;
   --text: #e6e6eb;
   --muted: #9aa0a6;
-  --neon-yellow: #FFF300;
+  
 }
 
 /* =====================
@@ -108,13 +109,25 @@ header {
 .cell.correct {
   background: #28d45c;
 }
+.key.correct {
+  background: #28d45c;
+}
+
 
 .cell.present {
   background: #fff300;
   color: #000;
 }
+.key.present {
+  background: #fff300;
+  color: #000;
+}
 
 .cell.absent {
+  background: #2a2a35;
+  color: #bbb;
+}
+.key.absent {
   background: #2a2a35;
   color: #bbb;
 }
@@ -274,7 +287,7 @@ Titre 1 et 2
 /* =====================
    KEYFRAMES
    ===================== */
-@keyframes load {
+/* @keyframes load {
   from {
     width: 0%;
   }
@@ -354,4 +367,4 @@ Titre 1 et 2
     transform: translateX(100vw);
     display: none
   }
-}
+} */
