@@ -304,6 +304,11 @@ function colorRowAndGetCorrect() {
       cell.dataset.locked = "0";
     });
 
+    // réinitialiser les couleurs du clavier
+    keys.forEach(key => {
+      key.classList.remove("correct", "present", "absent");
+    });
+
     // remettre la 1ère lettre (motus)
     const firstLetter = secret[0];
     const firstCell = getRowCells(0)[0];
