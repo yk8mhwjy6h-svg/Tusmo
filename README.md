@@ -10,7 +10,7 @@ Saisie du mot :
 - Les lettres qui ont déjà été utilisés sont grisées => Validé
 - Les lettres qui ont été validés sont de couleur verte => Validé
 - Les lettres qui ont été validés et qui ne sont plus dans le mot ne peuvent plus être utilisé => Validé
-- Les lettres mal placés sont en jaune
+- Les lettres mal placés sont en jaune => Validé
 
 Générateur :
 - Générer un mot aléatoire => Validé
@@ -22,21 +22,24 @@ Grille de jeu :
 - Compteur qui affiche les tentatives => Validé
 
 Validation : 
-- Obliger l'utilisateur à saisir exactement 5 lettres => Validé 
+- Obliger l'utilisateur à saisir exactement 5 lettres => Validé
+- Si l'utilisateur ne saisie pas exactement 5 lettres, remettre la ligne à 0 => Validé
 - Le mot appartient à une liste de mots autorisés => Validé
 
 Feedback visuel :
 - Après validation, chaque case prend la couleur correspondante (vert/jaune/gris) => Validé
-- Après validation, chaque case prend la couleur correspondante avec une animation
+- Après validation, chaque case prend la couleur correspondante avec une animation 
 
 Fin de partie : 
 - Affichage d'un message de victoire ou de défaite, avec révélation du mot en cas d'échec => Validé
 
 Nouvelle partie : 
-- Possibilité de rejouer (nouveau mot du jour le lendemain, ou bouton "Rejouer" pour un mot aléatoire selon les choix techniques)
+- Possibilité de rejouer (nouveau mot du jour le lendemain, ou bouton "Rejouer" pour un mot aléatoire selon les choix techniques) => Validé
+- Replacer le bouton "Recommencer" => Validé
+- Fix le bug du bouton "Recommencer" qui continue a être actif après le click => Validé
 
 Soundboard : 
-- S'occuper de la soundboard lors de l'apparition du skeleton
+- S'occuper de la soundboard lors de l'apparition du skeleton => Julien
 - S'occuper de la soundboard lors du click pour valider le mot => Validé
 - S'occuper de la soundboard lorsque l'utilisateur a trouvé le bon mot => Validé
 - Gérer le problème de son lorsque l'utilisateur épuise ses tentatives (SoundFail et SoundFault sont joués en même temps) => Validé
@@ -44,8 +47,5 @@ Soundboard :
 
 Tâches à effectuer en CSS :
   - S'occuper des bordures internes au niveau des .cell => Validé
-  - S'occuper du skeleton => Jérôme
-
-Tâches à effectuer en CSS/HTML :
-  - Générer une nouvelle page
+  - S'occuper du skeleton 
 
