@@ -101,9 +101,16 @@ document.addEventListener("DOMContentLoaded", function () {
     for (let i = 0; i < WORD_LENGTH; i++) {
       if (rowCells[i].innerText === "") {
         alert("Vous devez insérer 5 lettres !");
+        // Efface automatiquement les lettres de la ligne
+        for (let j = 0; j < WORD_LENGTH; j++) {
+          if (rowCells[j].dataset.locked !== "1") {
+            rowCells[j].innerText = "";
+          }
+        }
+        currentCol = 0;
         return false;
       }
-    }
+      };
     return true;
   }
 
@@ -320,9 +327,7 @@ function colorRowAndGetCorrect() {
     attempt.textContent = "Tentatives restantes : " + compteur;
   }
 
-  if (restartBtn) {
     restartBtn.addEventListener("click", resetGame);
-  }
 
   // ============================================================
   // ÉVÉNEMENTS

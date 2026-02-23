@@ -52,14 +52,14 @@ body>img {
    ===================== */
 header {
   display: flex;
-  font-size: 30px;
+  font-size: 3rem;
   justify-content: center;
+  align-items: center;
   margin-top: 10px;
 }
 
 .logoTusmo {
   display: flex;
-  margin-left: 50px;
   font-size: 2rem;
   color: var(--neon-blue);
   text-shadow: 0 0 10px var(--neon-blue);
@@ -281,7 +281,6 @@ Titre 1 et 2
   color: #00f6ff;
   z-index: 2;
   animation: translateA 15s ease-in forwards;
-
 }
 
 /* =====================
@@ -369,7 +368,6 @@ Titre 1 et 2
   }
 }
 #restartBtn{
-  margin: 16px auto 0;
   padding: 12px 18px;
   font-family: "Audiowide", sans-serif;
   font-size: 1rem;
@@ -379,8 +377,10 @@ Titre 1 et 2
   border-radius: 10px;
   cursor: pointer;
   box-shadow: 0 0 12px var(--neon-pink);
-  position: relative;
-  z-index: 999;
+  top: 11%;
+  right: 5%;
+  position: absolute;
+
 }
 
 #restartBtn:hover{
