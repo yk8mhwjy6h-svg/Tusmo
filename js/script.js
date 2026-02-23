@@ -26,7 +26,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const soundFail = new Audio("assets/soundfail.mp3");
   const soundWin = new Audio("assets/soundWin.mp3");
-  const soundFault = new Audio("assets/soundfault.mp3");
+  // const soundFault = new Audio("assets/soundfault.mp3");
+  const greenCell = new Audio("assets/greenCell.mp3");
+  const yellowCell = new Audio("assets/yellowCell.mp3");
+  const greyCell = new Audio("assets/greyCell.mp3");
 
   // ============================================================
   // ÉTAT DU JEU
@@ -114,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return true;
   }
 
-function colorRowAndGetCorrect() {
+async function colorRowAndGetCorrect() {
   // Récupère toutes les cellules de la ligne courante
   const rowCells = getRowCells(currentRow);
 
@@ -136,14 +139,18 @@ function colorRowAndGetCorrect() {
   }
 
   // ========================
-  // Étape 2 : marquer les lettres EXACTES (correct)
+  // Étape 2 : traiter chaque case une par une (dans l'ordre)
   // ========================
   for (let i = 0; i < WORD_LENGTH; i++) {
     const letter = guessArray[i];
 
+    await new Promise(resolve => setTimeout(resolve, 230)); // délai pour l'effet de rebond
+
     // Si la lettre correspond exactement à celle du mot secret à la même position
     if (letter === secretArray[i]) {
       rowCells[i].classList.add("correct");   // couleur verte sur la grille
+      greenCell.currentTime = 0;
+      greenCell.play();                       // joue le son green
       correctLetters[i] = letter;             // mémorise pour la prochaine ligne
       secretArray[i] = null;                  // on "consomme" la lettre du mot secret
       guessArray[i] = null;                   // on la supprime du mot deviné temporaire
@@ -154,39 +161,36 @@ function colorRowAndGetCorrect() {
         keyElement.classList.remove("present", "absent"); // retire les anciennes couleurs
         keyElement.classList.add("correct");              // couleur verte
       }
-    }
-  }
+    } else if (letter) {
+      // Vérifie si la lettre est encore dans le mot secret (mal placée)
+      const index = secretArray.indexOf(letter);
 
-  // ========================
-  // Étape 3 : marquer les lettres PRÉSENTES mais mal placées (present)
-  // ========================
-  for (let i = 0; i < WORD_LENGTH; i++) {
-    const letter = guessArray[i];
-    if (!letter) continue; // si déjà marqué correct, on saute
+      if (index !== -1) {
+        rowCells[i].classList.add("present"); // couleur jaune sur la grille
+        yellowCell.currentTime = 0;
+        yellowCell.play();                    // joue le son yellow
+        secretArray[index] = null;            // on "consomme" la lettre du mot secret
 
-    // Vérifie si la lettre est encore dans le mot secret (mal placée)
-    const index = secretArray.indexOf(letter);
+        // Colore la touche correspondante du clavier
+        const keyElement = document.querySelector(`.key[data-key="${letter}"]`);
+        if (keyElement && !keyElement.classList.contains("correct")) {
+          keyElement.classList.remove("absent");
+          keyElement.classList.add("present"); // couleur jaune
+        }
 
-    if (index !== -1) {
-      rowCells[i].classList.add("present"); // couleur jaune sur la grille
-      secretArray[index] = null;            // on "consomme" la lettre du mot secret
+      } else {
+        // Lettre absente du mot secret
 
-      // Colore la touche correspondante du clavier
-      const keyElement = document.querySelector(`.key[data-key="${letter}"]`);
-      if (keyElement && !keyElement.classList.contains("correct")) {
-        keyElement.classList.remove("absent");
-        keyElement.classList.add("present"); // couleur jaune
-      }
+        rowCells[i].classList.add("absent"); // couleur grise sur la grille
+        greyCell.currentTime = 0;
+        greyCell.play();                     // joue le son grey
 
-    } else {
-      // Lettre absente du mot secret
-      rowCells[i].classList.add("absent"); // couleur grise sur la grille
-
-      const keyElement = document.querySelector(`.key[data-key="${letter}"]`);
-      if (keyElement &&
-          !keyElement.classList.contains("correct") && // ne pas rétrograder un vert
-          !keyElement.classList.contains("present")) { // ne pas rétrograder un jaune
-        keyElement.classList.add("absent");           // couleur grise
+        const keyElement = document.querySelector(`.key[data-key="${letter}"]`);
+        if (keyElement &&
+            !keyElement.classList.contains("correct") && // ne pas rétrograder un vert
+            !keyElement.classList.contains("present")) { // ne pas rétrograder un jaune
+          keyElement.classList.add("absent");           // couleur grise
+        }
       }
     }
   }
@@ -212,7 +216,7 @@ function colorRowAndGetCorrect() {
     }
   }
 
-  function submitRow() {
+  async function submitRow() {
     if (!rowIsFull()) return;
 
     const rowCells = getRowCells(currentRow);
@@ -241,10 +245,10 @@ function colorRowAndGetCorrect() {
 
     const isWinner = (guess === secret);
 
-    const correctLetters = colorRowAndGetCorrect();
+    const correctLetters = await colorRowAndGetCorrect();
 
     if (isWinner) {
-      soundWin.play();
+      // soundWin.play();
       alert("Félicitations ! Vous avez trouvé le mot secret : " + secret);
       return;
     }
@@ -258,7 +262,7 @@ function colorRowAndGetCorrect() {
       return;
     }
 
-    soundFault.play();
+    // soundFault.play();
 
     applyCorrectToNextRow(correctLetters);
     currentRow++;
