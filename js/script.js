@@ -12,6 +12,18 @@ document.addEventListener("DOMContentLoaded", function () {
       startScreen.remove();
     }, { once: true });
   });
+  // bouton de démarage"
+  const startScreen = document.getElementById("startScreen");
+  const startBtn = document.getElementById("startBtn");
+  const soundSkeleton = new Audio("../assets/soundSkeleton.mp3")
+
+  startBtn.addEventListener("click", () => {
+    soundSkeleton.play()
+    startScreen.classList.add("hide");
+    startScreen.addEventListener("transitionend", () => {
+      startScreen.remove();
+    }, { once: true });
+  });
   // ============================================================
   // CONSTANTES ET CONFIGURATION
   // ============================================================
@@ -138,13 +150,26 @@ async function colorRowAndGetCorrect() {
 
     // Tableau pour mémoriser les lettres correctes à transmettre à la prochaine ligne
     const correctLetters = Array(WORD_LENGTH).fill("");
+    // Tableau pour mémoriser les lettres correctes à transmettre à la prochaine ligne
+    const correctLetters = Array(WORD_LENGTH).fill("");
 
+    // Copie du mot secret pour "consommer" les lettres au fur et à mesure
+    const secretArray = secret.split("");
     // Copie du mot secret pour "consommer" les lettres au fur et à mesure
     const secretArray = secret.split("");
 
     // Tableau temporaire pour le mot deviné par le joueur
     const guessArray = [];
+    // Tableau temporaire pour le mot deviné par le joueur
+    const guessArray = [];
 
+    // ========================
+    // Étape 1 : récupérer le mot deviné
+    // ========================
+    for (let i = 0; i < WORD_LENGTH; i++) {
+      guessArray.push(rowCells[i].innerText);   // on stocke chaque lettre de la ligne
+      rowCells[i].classList.remove("correct", "present", "absent"); // on nettoie les anciennes classes
+    }
     // ========================
     // Étape 1 : récupérer le mot deviné
     // ========================
@@ -177,7 +202,15 @@ async function colorRowAndGetCorrect() {
           keyElement.classList.add("correct");              // couleur verte
         }
       }
-    else if (letter) {
+    }
+
+    // ========================
+    // Étape 3 : marquer les lettres PRÉSENTES mais mal placées (present)
+    // ========================
+    for (let i = 0; i < WORD_LENGTH; i++) {
+      const letter = guessArray[i];
+      if (!letter) continue; // si déjà marqué correct, on saute
+
       // Vérifie si la lettre est encore dans le mot secret (mal placée)
       const index = secretArray.indexOf(letter);
 
@@ -211,9 +244,9 @@ async function colorRowAndGetCorrect() {
     }
   }
 
-  // On renvoie les lettres correctes pour bloquer la prochaine ligne
-  return correctLetters;
-}
+    // On renvoie les lettres correctes pour bloquer la prochaine ligne
+    return correctLetters;
+  }
 
 
 
