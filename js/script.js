@@ -262,10 +262,10 @@ async function colorRowAndGetCorrect() {
 
     if (isWinner) {
       // Attendre que le dernier son greenCell.mp3 soit terminé avant de jouer soundWin
+      soundWin.play();
       setTimeout(() => {
-        soundWin.play();
         alert("Félicitations ! Vous avez trouvé le mot secret : " + secret);
-      }, 300);
+      }, 500);
       return;
     }
 
@@ -274,11 +274,12 @@ async function colorRowAndGetCorrect() {
 
     if (compteur <= 0) {
       soundFail.play();
-      alert("Dommage ! Le mot secret était : " + secret);
+      setTimeout(() => {
+        alert("Dommage ! Le mot secret était : " + secret);
+      }, 500);
       return;
     }
 
-    // soundFault.play();
 
     applyCorrectToNextRow(correctLetters);
     currentRow++;
