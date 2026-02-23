@@ -42,8 +42,8 @@ body>img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  animation: visible 2s;
-  animation-delay: 13s;
+  animation: visible 10s ease forwards;
+  animation-delay:7s;
   animation-fill-mode: both;
 }
 
@@ -218,14 +218,14 @@ header {
   background-color: #ddd;
   border-radius: 20px;
   overflow: hidden;
-  animation: disparaitre 15s ease forwards;
+  animation: disparaitre 9s ease forwards;
 }
 
 .progress-bar {
   height: 100%;
   background-color: #6262d1;
   border-radius: 20px;
-  animation: load 15s ease-in forwards;
+  animation: load 9s ease-in forwards;
 }
 
 /* =====================
@@ -236,20 +236,25 @@ header {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height:100%;
+  
   z-index: 2;
   pointer-events: none;
   opacity: 0;
-  animation: becaro 10s ease-in forwards;
-  animation-delay: 15s;
+  animation: becaro 7s ease-in forwards;
+  animation-delay: 9s;
   animation-fill-mode: both;
+  display:flex;
+
+  justify-content: center;;
+}
+.skeletton img {
+  max-width: 50vw;
+  max-height: 50vh;
+  
 }
 
-.skeletton img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+
 
 /* =====================
    CONTENU PRINCIPAL
@@ -258,7 +263,7 @@ header {
   position: relative;
   z-index: 1;
   animation: visible 2s;
-  animation-delay: 19s;
+  animation-delay: 16s;
   animation-fill-mode: both;
 }
 
@@ -316,12 +321,13 @@ Titre 1 et 2
 @keyframes visible {
 
   0%,
-  75% {
-    opacity: 0;
+  90% {
+    opacity: 1; filter: blur(20px);
   }
+  
 
   100% {
-    opacity: 1;
+    opacity: 1; filter : blur(0px);
   }
 }
 
@@ -392,28 +398,33 @@ Titre 1 et 2
   color: #000;
 }
 
-/* La classe qui déclenche l'animation */
-.flip {
-  animation: flip-cell 0.6s ease-in-out forwards;
-}
-
-@keyframes flip-cell {
-  0% {
-    transform: rotateY(0deg);
-  }
-  45% {
-    transform: rotateY(90deg); /* La cellule est de profil, invisible */
-  }
-  55% {
-    transform: rotateY(90deg);
-    /* C'est ici que la couleur change visuellement dans le JS */
-  }
-  100% {
-    transform: rotateY(0deg); /* Elle revient à plat */
-  }
-}
-
 /* Optionnel : ajoutez une perspective au conteneur des lignes pour un effet 3D plus réel */
-.row {
-  perspective: 1000px;
+
+#startScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: url("https://i.pinimg.com/originals/64/a8/08/64a8083d07b8c98923311cbc88fecafe.gif") center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+  cursor: none;
+  
+}
+
+#startScreen.hide {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+#startBtn {
+  padding: 18px 50px;
+  font-family: "Audiowide", sans-serif;
+  font-size: 1.1rem;
+  background: transparent;
+  border: 2px solid var(--neon-pink);
+  color: var(--neon-pink);
+  cursor: pointer;
 }
