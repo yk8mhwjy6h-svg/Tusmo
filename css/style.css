@@ -295,7 +295,7 @@ Titre 1 et 2
 /* =====================
    KEYFRAMES
    ===================== */
-/* @keyframes load {
+@keyframes load {
   from {
     width: 0%;
   }
@@ -376,7 +376,7 @@ Titre 1 et 2
     transform: translateX(100vw);
     display: none
   }
-} */
+}
 #restartBtn{
   padding: 12px 18px;
   font-family: "Audiowide", sans-serif;

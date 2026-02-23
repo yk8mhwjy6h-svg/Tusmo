@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
         currentCol = 0;
         return false;
       }
-      };
+    }
     return true;
   }
 
@@ -174,7 +174,7 @@ async function colorRowAndGetCorrect() {
           keyElement.classList.add("correct");              // couleur verte
         }
       }
-    } else if (letter) {
+    else if (letter) {
       // Vérifie si la lettre est encore dans le mot secret (mal placée)
       const index = secretArray.indexOf(letter);
 
@@ -206,10 +206,11 @@ async function colorRowAndGetCorrect() {
         }
       }
     }
-
-    // On renvoie les lettres correctes pour bloquer la prochaine ligne
-    return correctLetters;
   }
+
+  // On renvoie les lettres correctes pour bloquer la prochaine ligne
+  return correctLetters;
+}
 
 
 
