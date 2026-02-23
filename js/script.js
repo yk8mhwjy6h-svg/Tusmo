@@ -28,6 +28,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const enter = document.getElementById("buttonEnter");
   const attempt = document.getElementById("attempt");
   const cursor = document.querySelector(".cyber-cursor");
+  const playWin = document.getElementById("playWin");
+  const playCount = document.getElementById("playCount");
 
   // bouton restart 
   const restartBtn = document.getElementById("restartBtn");
@@ -38,7 +40,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const soundFail = new Audio("assets/soundfail.mp3");
   const soundWin = new Audio("assets/win.mp3");
-  // const soundFault = new Audio("assets/soundfault.mp3");
   const greenCell = new Audio("assets/greenCell.mp3");
   const yellowCell = new Audio("assets/yellowCell.mp3");
   const greyCell = new Audio("assets/greyCell.mp3");
@@ -59,6 +60,8 @@ document.addEventListener("DOMContentLoaded", function () {
   let currentRow = 0;
   let currentCol = 0;
   let compteur = 6;
+  let compteurWin = 0;
+  let compteurPlay = 0;
 
   // init : toutes les cases non verrouillées par défaut
   document.querySelectorAll(".cell").forEach(cell => {
@@ -262,15 +265,18 @@ async function colorRowAndGetCorrect() {
 
     if (isWinner) {
       // Attendre que le dernier son greenCell.mp3 soit terminé avant de jouer soundWin
-      soundWin.play();
       setTimeout(() => {
+        soundWin.play();
         alert("Félicitations ! Vous avez trouvé le mot secret : " + secret);
       }, 500);
+      compteurWin++;
+      playWin.textContent = "Parties gagnées : " + compteurWin;
       return;
     }
 
     compteur--;
     attempt.textContent = "Tentatives restantes : " + compteur;
+    
 
     if (compteur <= 0) {
       soundFail.play();
@@ -324,6 +330,10 @@ async function colorRowAndGetCorrect() {
     // reset état
     currentRow = 0;
     compteur = 6;
+
+    // Incrementer le compteur de parties jouées
+    compteurPlay++;
+    playCount.textContent = "Parties jouées : " + compteurPlay;
 
     // vider la grille + enlever couleurs + déverrouiller
     document.querySelectorAll(".cell").forEach(cell => {

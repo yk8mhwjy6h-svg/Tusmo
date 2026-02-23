@@ -387,7 +387,7 @@ Titre 1 et 2
   border-radius: 10px;
   cursor: pointer;
   box-shadow: 0 0 12px var(--neon-pink);
-  top: 11%;
+  top: 27%;
   right: 5%;
   position: absolute;
 
@@ -425,5 +425,26 @@ Titre 1 et 2
   background: transparent;
   border: 2px solid var(--neon-pink);
   color: var(--neon-pink);
-  cursor: pointer;
+  cursor: none;
+  transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+#startBtn:hover {
+  background: var(--neon-pink);
+  color: #000;
+  transform: scale(1.1);
+}
+
+#playWin {
+  position: absolute;
+  top: 12%;
+  right: 5%;
+  color: var(--text);
+}
+
+#playCount {
+  position: absolute;
+  top: 20%;
+  right: 5%;
+  color: var(--text);
 }
