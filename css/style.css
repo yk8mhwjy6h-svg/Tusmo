@@ -445,7 +445,28 @@ Titre 1 et 2
   background: transparent;
   border: 2px solid var(--neon-pink);
   color: var(--neon-pink);
-  cursor: pointer;
+  
+  cursor: none;
+  transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+#startBtn:hover {
+  background: var(--neon-pink);
+  color: #000;
+  transform: scale(1.1);
+}
+
+#playWin {
+  position: absolute;
+  top: 12%;
+  right: 5%;
+  color: var(--text);
+}
+
+#playCount {
+  position: absolute;
+  top: 20%;
+  right: 5%;
+  color: var(--text);
 }
 @media  (max-width:768px){
   #titre1 {
@@ -472,27 +493,27 @@ Titre 1 et 2
   .keyboard{
     margin-top : 10%
   }
-
-  cursor: none;
-  transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+#attempt{
+  position:absolute;
+  top:120%;
+  color:var(--neon-yellow)
+}
+#playWin{
+  position:absolute;
+  top:130%;
+  color:var(--neon-yellow)
+}
+#playCount{
+  position:absolute;
+  top:140%;
+  color:var(--neon-yellow)
+}
+#restartBtn{
+  position:absolute;
+  top:105%;
+  right:30%;
 }
 
-#startBtn:hover {
-  background: var(--neon-pink);
-  color: #000;
-  transform: scale(1.1);
+  
 }
 
-#playWin {
-  position: absolute;
-  top: 12%;
-  right: 5%;
-  color: var(--text);
-}
-
-#playCount {
-  position: absolute;
-  top: 20%;
-  right: 5%;
-  color: var(--text);
-}

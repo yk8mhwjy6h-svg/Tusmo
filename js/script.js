@@ -12,18 +12,6 @@ document.addEventListener("DOMContentLoaded", function () {
       startScreen.remove();
     }, { once: true });
   });
-  // bouton de démarage"
-  const startScreen = document.getElementById("startScreen");
-  const startBtn = document.getElementById("startBtn");
-  const soundSkeleton = new Audio("../assets/soundSkeleton.mp3")
-
-  startBtn.addEventListener("click", () => {
-    soundSkeleton.play()
-    startScreen.classList.add("hide");
-    startScreen.addEventListener("transitionend", () => {
-      startScreen.remove();
-    }, { once: true });
-  });
   // ============================================================
   // CONSTANTES ET CONFIGURATION
   // ============================================================
@@ -150,26 +138,13 @@ async function colorRowAndGetCorrect() {
 
     // Tableau pour mémoriser les lettres correctes à transmettre à la prochaine ligne
     const correctLetters = Array(WORD_LENGTH).fill("");
-    // Tableau pour mémoriser les lettres correctes à transmettre à la prochaine ligne
-    const correctLetters = Array(WORD_LENGTH).fill("");
 
-    // Copie du mot secret pour "consommer" les lettres au fur et à mesure
-    const secretArray = secret.split("");
     // Copie du mot secret pour "consommer" les lettres au fur et à mesure
     const secretArray = secret.split("");
 
     // Tableau temporaire pour le mot deviné par le joueur
     const guessArray = [];
-    // Tableau temporaire pour le mot deviné par le joueur
-    const guessArray = [];
 
-    // ========================
-    // Étape 1 : récupérer le mot deviné
-    // ========================
-    for (let i = 0; i < WORD_LENGTH; i++) {
-      guessArray.push(rowCells[i].innerText);   // on stocke chaque lettre de la ligne
-      rowCells[i].classList.remove("correct", "present", "absent"); // on nettoie les anciennes classes
-    }
     // ========================
     // Étape 1 : récupérer le mot deviné
     // ========================
@@ -202,15 +177,7 @@ async function colorRowAndGetCorrect() {
           keyElement.classList.add("correct");              // couleur verte
         }
       }
-    }
-
-    // ========================
-    // Étape 3 : marquer les lettres PRÉSENTES mais mal placées (present)
-    // ========================
-    for (let i = 0; i < WORD_LENGTH; i++) {
-      const letter = guessArray[i];
-      if (!letter) continue; // si déjà marqué correct, on saute
-
+    else if (letter) {
       // Vérifie si la lettre est encore dans le mot secret (mal placée)
       const index = secretArray.indexOf(letter);
 
@@ -244,9 +211,9 @@ async function colorRowAndGetCorrect() {
     }
   }
 
-    // On renvoie les lettres correctes pour bloquer la prochaine ligne
-    return correctLetters;
-  }
+  // On renvoie les lettres correctes pour bloquer la prochaine ligne
+  return correctLetters;
+}
 
 
 
@@ -430,96 +397,3 @@ async function colorRowAndGetCorrect() {
 
   currentCol = moveToNextFreeCol();
 });
-
-// ============================================================
-  // LOCAL STORAGE 
-  // ============================================================
-
-// Appeler saveBestScore(compteur) à la fin de submitRow() si le joueur gagne ou perd, pour enregistrer le score. Vous pouvez aussi afficher le meilleur score dans l'interface utilisateur si vous le souhaitez.
-
-function submitRow() {
-  // ... code existant ...
-
-  if (isWinner) {
-    soundWin.play();
-    saveBestScore(compteur); // Enregistre le score si le joueur gagne
-    setTimeout(() => {
-      alert("Félicitations ! Vous avez trouvé le mot secret : " + secret);
-    }, 500);
-    return;
-  }
-
-  if (compteur <= 0) {
-    soundFail.play();
-    saveBestScore(compteur); // Enregistre le score si le joueur perd
-    setTimeout(() => {
-      alert("Dommage ! Le mot secret était : " + secret);
-    }, 500);
-    return;
-  }
-
-  // ... code existant ...
-}   
-
-// Vous pouvez aussi afficher le meilleur score dans l'interface utilisateur, par exemple dans un élément avec l'id "bestScore":
-
-const bestScoreElement = document.getElementById("bestScore");
-if (bestScoreElement) {
-  const bestScore = getBestScore();
-  if (bestScore) {
-    bestScoreElement.textContent = "Meilleur score : " + bestScore + " tentatives restantes";
-  } else {
-    bestScoreElement.textContent = "Meilleur score : N/A";
-  }
-}   
-
-// Local storage de l'etat de la game pour permettre au joueur de revenir à sa partie en cours même après avoir fermé l'onglet ou le navigateur. Vous pouvez stocker des informations telles que le mot secret, les tentatives restantes, la grille actuelle, etc. dans le local storage et les récupérer lors du chargement de la page pour restaurer l'état du jeu.
-
-function saveGameState() {
-  const gameState = {
-    secret: secret,
-    currentRow: currentRow,
-    compteur: compteur,
-    grid: Array.from(document.querySelectorAll(".cell")).map(cell => ({
-      text: cell.innerText,
-      locked: cell.dataset.locked,
-      classes: cell.className
-    })),
-    keys: Array.from(keys).map(key => ({
-      key: key.dataset.key,
-      classes: key.className
-    }))
-  };
-  localStorage.setItem("motusGameState", JSON.stringify(gameState));
-}
-
-function loadGameState() {
-  const savedState = localStorage.getItem("motusGameState");
-  if (savedState) {
-    const gameState = JSON.parse(savedState);
-    secret = gameState.secret;
-    currentRow = gameState.currentRow;
-    compteur = gameState.compteur;
-
-    // Restaurer la grille
-    const cells = document.querySelectorAll(".cell");
-    gameState.grid  .forEach((cellState, index) => {
-      cells[index].innerText = cellState.text;
-      cells[index].dataset.locked = cellState.locked;
-      cells[index].className = cellState.classes;
-    });
-
-    // Restaurer les touches du clavier
-    keys.forEach(key => {
-      const keyState = gameState.keys.find(k => k.key === key.dataset.key);
-      if (keyState) {
-        key.className = keyState.classes;
-      }
-    });
-
-    // Mettre à jour l'affichage des tentatives restantes
-    attempt.textContent = "Tentatives restantes : " + compteur;
-  }
-}
-
-// 
