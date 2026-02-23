@@ -133,7 +133,8 @@ header {
 }
 
 .cell {
-  transition: background-color 0.5s ease, border-color 0.5s ease;
+  
+  background-color: rgba(0, 0, 0, 0.39)
 }
 
 /* =====================
@@ -295,7 +296,7 @@ Titre 1 et 2
 /* =====================
    KEYFRAMES
    ===================== */
-@keyframes load {
+/* @keyframes load {
   from {
     width: 0%;
   }
@@ -376,7 +377,7 @@ Titre 1 et 2
     transform: translateX(100vw);
     display: none
   }
-}
+} */
 #restartBtn{
   padding: 12px 18px;
   font-family: "Audiowide", sans-serif;
@@ -425,6 +426,34 @@ Titre 1 et 2
   background: transparent;
   border: 2px solid var(--neon-pink);
   color: var(--neon-pink);
+  cursor: pointer;
+}
+@media  (max-width:768px){
+  #titre1 {
+  display:none
+  }
+  #titre2{
+    display:none
+  }
+  .progress-container{
+    display:none
+
+  }
+  #startScreen{
+    display:none
+  }
+ .key{
+  width:30px;
+  height:25px;
+ }
+ #buttonReturn, #buttonEnter{
+  width: 65px;
+  height:25px;
+ }
+  .keyboard{
+    margin-top : 10%
+  }
+
   cursor: none;
   transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
 }
