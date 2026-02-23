@@ -355,21 +355,21 @@ Titre 1 et 2
   }
 
   50% {
-    transform: translateX(110vw)
+    transform: translateX(100vw)
   }
 
   100% {
-    transform: translateX(-40vw)
+    transform: translateX(-30vw)
   }
 }
 
 @keyframes translateA {
   0% {
-    transform: translateX(100vw)
+    transform: translateX(110vw)
   }
 
   50% {
-    transform: translateX(-50vw)
+    transform: translateX(-30vw)
   }
 
   100% {
