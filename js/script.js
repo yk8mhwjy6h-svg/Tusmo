@@ -69,6 +69,67 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // ============================================================
+  // PERSISTENCE (localStorage)
+  // ============================================================
+
+  function saveState() {
+    try {
+      const cells = Array.from(document.querySelectorAll(".cell")).map(c => ({ t: c.innerText, locked: c.dataset.locked }));
+      const keysState = Array.from(keys).map(k => k.className);
+      const state = { secret, currentRow, currentCol, compteur, compteurWin, compteurPlay, cells, keysState };
+      localStorage.setItem("tusmo_state", JSON.stringify(state));
+    } catch (e) {
+      console.error('Erreur saveState', e);
+    }
+  }
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem("tusmo_state");
+      if (!raw) return false;
+      const state = JSON.parse(raw);
+      if (!state) return false;
+
+      // Restaurer valeurs simples
+      secret = state.secret || secret;
+      currentRow = (typeof state.currentRow === 'number') ? state.currentRow : 0;
+      currentCol = (typeof state.currentCol === 'number') ? state.currentCol : 0;
+      compteur = (typeof state.compteur === 'number') ? state.compteur : compteur;
+      compteurWin = (typeof state.compteurWin === 'number') ? state.compteurWin : 0;
+      compteurPlay = (typeof state.compteurPlay === 'number') ? state.compteurPlay : 0;
+
+      // Restaurer cellules
+      const cells = document.querySelectorAll('.cell');
+      if (state.cells && Array.isArray(state.cells)) {
+        state.cells.forEach((c, i) => {
+          if (cells[i]) {
+            cells[i].innerText = c.t || "";
+            cells[i].dataset.locked = c.locked || "0";
+            cells[i].classList.remove('correct', 'present', 'absent');
+          }
+        });
+      }
+
+      // Restaurer état clavier si présent
+      if (Array.isArray(state.keysState)) {
+        Array.from(keys).forEach((k, i) => {
+          if (state.keysState[i] !== undefined) k.className = state.keysState[i];
+        });
+      }
+
+      // Mettre à jour affichages
+      attempt.textContent = "Tentatives restantes : " + compteur;
+      playWin.textContent = "Parties gagnées : " + compteurWin;
+      playCount.textContent = "Parties jouées : " + compteurPlay;
+
+      return true;
+    } catch (e) {
+      console.error('Erreur loadState', e);
+      return false;
+    }
+  }
+
+  // ============================================================
   // FONCTIONS UTILITAIRES
   // ============================================================
 
@@ -102,6 +163,8 @@ document.addEventListener("DOMContentLoaded", function () {
     while (currentCol < WORD_LENGTH && rowCells[currentCol].dataset.locked === "1") {
       currentCol++;
     }
+    // sauvegarde de l'état après saisie
+    saveState();
   }
 
   function deleteLetter() {
@@ -112,6 +175,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     rowCells[i].innerText = "";
     currentCol = i;
+    // sauvegarde de l'état après suppression
+    saveState();
   }
 
   function rowIsFull() {
@@ -271,6 +336,7 @@ async function colorRowAndGetCorrect() {
       }, 500);
       compteurWin++;
       playWin.textContent = "Parties gagnées : " + compteurWin;
+      saveState();
       return;
     }
 
@@ -283,6 +349,7 @@ async function colorRowAndGetCorrect() {
       setTimeout(() => {
         alert("Dommage ! Le mot secret était : " + secret);
       }, 500);
+      saveState();
       return;
     }
 
@@ -290,6 +357,8 @@ async function colorRowAndGetCorrect() {
     applyCorrectToNextRow(correctLetters);
     currentRow++;
     currentCol = moveToNextFreeCol();
+    // sauvegarde après soumission et déplacement de ligne
+    saveState();
   }
 
   // ============================================================
@@ -356,6 +425,8 @@ async function colorRowAndGetCorrect() {
     // remise de la position de saisie + affichage tentatives
     currentCol = moveToNextFreeCol();
     attempt.textContent = "Tentatives restantes : " + compteur;
+    // sauvegarder l'état après reset
+    saveState();
   }
 
     restartBtn.addEventListener("click", () => {
@@ -387,106 +458,18 @@ async function colorRowAndGetCorrect() {
   // ============================================================
   // INITIALISATION
   // ============================================================
-
-  attempt.textContent = "Tentatives restantes : " + compteur;
-
-  const firstLetter = secret[0];
-  const firstCell = getRowCells(0)[0];
-  firstCell.innerText = firstLetter;
-  firstCell.dataset.locked = "1";
-
-  currentCol = moveToNextFreeCol();
-});
-
-// ============================================================
-  // LOCAL STORAGE 
-  // ============================================================
-
-// Appeler saveBestScore(compteur) à la fin de submitRow() si le joueur gagne ou perd, pour enregistrer le score. Vous pouvez aussi afficher le meilleur score dans l'interface utilisateur si vous le souhaitez.
-
-function submitRow() {
-  // ... code existant ...
-
-  if (isWinner) {
-    soundWin.play();
-    saveBestScore(compteur); // Enregistre le score si le joueur gagne
-    setTimeout(() => {
-      alert("Félicitations ! Vous avez trouvé le mot secret : " + secret);
-    }, 500);
-    return;
-  }
-
-  if (compteur <= 0) {
-    soundFail.play();
-    saveBestScore(compteur); // Enregistre le score si le joueur perd
-    setTimeout(() => {
-      alert("Dommage ! Le mot secret était : " + secret);
-    }, 500);
-    return;
-  }
-
-  // ... code existant ...
-}   
-
-// Vous pouvez aussi afficher le meilleur score dans l'interface utilisateur, par exemple dans un élément avec l'id "bestScore":
-
-const bestScoreElement = document.getElementById("bestScore");
-if (bestScoreElement) {
-  const bestScore = getBestScore();
-  if (bestScore) {
-    bestScoreElement.textContent = "Meilleur score : " + bestScore + " tentatives restantes";
-  } else {
-    bestScoreElement.textContent = "Meilleur score : N/A";
-  }
-}   
-
-// Local storage de l'etat de la game pour permettre au joueur de revenir à sa partie en cours même après avoir fermé l'onglet ou le navigateur. Vous pouvez stocker des informations telles que le mot secret, les tentatives restantes, la grille actuelle, etc. dans le local storage et les récupérer lors du chargement de la page pour restaurer l'état du jeu.
-
-function saveGameState() {
-  const gameState = {
-    secret: secret,
-    currentRow: currentRow,
-    compteur: compteur,
-    grid: Array.from(document.querySelectorAll(".cell")).map(cell => ({
-      text: cell.innerText,
-      locked: cell.dataset.locked,
-      classes: cell.className
-    })),
-    keys: Array.from(keys).map(key => ({
-      key: key.dataset.key,
-      classes: key.className
-    }))
-  };
-  localStorage.setItem("motusGameState", JSON.stringify(gameState));
-}
-
-function loadGameState() {
-  const savedState = localStorage.getItem("motusGameState");
-  if (savedState) {
-    const gameState = JSON.parse(savedState);
-    secret = gameState.secret;
-    currentRow = gameState.currentRow;
-    compteur = gameState.compteur;
-
-    // Restaurer la grille
-    const cells = document.querySelectorAll(".cell");
-    gameState.grid  .forEach((cellState, index) => {
-      cells[index].innerText = cellState.text;
-      cells[index].dataset.locked = cellState.locked;
-      cells[index].className = cellState.classes;
-    });
-
-    // Restaurer les touches du clavier
-    keys.forEach(key => {
-      const keyState = gameState.keys.find(k => k.key === key.dataset.key);
-      if (keyState) {
-        key.className = keyState.classes;
-      }
-    });
-
-    // Mettre à jour l'affichage des tentatives restantes
+  // INITIALISATION: tenter de charger l'état précédemment sauvegardé
+  if (!loadState()) {
     attempt.textContent = "Tentatives restantes : " + compteur;
-  }
-}
 
-// 
+    const firstLetter = secret[0];
+    const firstCell = getRowCells(0)[0];
+    firstCell.innerText = firstLetter;
+    firstCell.dataset.locked = "1";
+
+    currentCol = moveToNextFreeCol();
+  } else {
+    // si un état a été chargé, s'assurer que le curseur pointe sur la bonne colonne
+    currentCol = moveToNextFreeCol();
+  }
+});
