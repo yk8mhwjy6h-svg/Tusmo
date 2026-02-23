@@ -129,15 +129,9 @@ document.addEventListener("DOMContentLoaded", function () {
     return true;
   }
 
-<<<<<<< HEAD
 async function colorRowAndGetCorrect() {
   // Récupère toutes les cellules de la ligne courante
   const rowCells = getRowCells(currentRow);
-=======
-  function colorRowAndGetCorrect() {
-    // Récupère toutes les cellules de la ligne courante
-    const rowCells = getRowCells(currentRow);
->>>>>>> 449628c (intro)
 
     // Tableau pour mémoriser les lettres correctes à transmettre à la prochaine ligne
     const correctLetters = Array(WORD_LENGTH).fill("");
@@ -156,7 +150,6 @@ async function colorRowAndGetCorrect() {
       rowCells[i].classList.remove("correct", "present", "absent"); // on nettoie les anciennes classes
     }
 
-<<<<<<< HEAD
   // ========================
   // Étape 2 : traiter chaque case une par une (dans l'ordre)
   // ========================
@@ -173,20 +166,6 @@ async function colorRowAndGetCorrect() {
       correctLetters[i] = letter;             // mémorise pour la prochaine ligne
       secretArray[i] = null;                  // on "consomme" la lettre du mot secret
       guessArray[i] = null;                   // on la supprime du mot deviné temporaire
-=======
-    // ========================
-    // Étape 2 : marquer les lettres EXACTES (correct)
-    // ========================
-    for (let i = 0; i < WORD_LENGTH; i++) {
-      const letter = guessArray[i];
-
-      // Si la lettre correspond exactement à celle du mot secret à la même position
-      if (letter === secretArray[i]) {
-        rowCells[i].classList.add("correct");   // couleur verte sur la grille
-        correctLetters[i] = letter;             // mémorise pour la prochaine ligne
-        secretArray[i] = null;                  // on "consomme" la lettre du mot secret
-        guessArray[i] = null;                   // on la supprime du mot deviné temporaire
->>>>>>> 449628c (intro)
 
         // Colore la touche correspondante du clavier
         const keyElement = document.querySelector(`.key[data-key="${letter}"]`);
@@ -195,7 +174,6 @@ async function colorRowAndGetCorrect() {
           keyElement.classList.add("correct");              // couleur verte
         }
       }
-<<<<<<< HEAD
     } else if (letter) {
       // Vérifie si la lettre est encore dans le mot secret (mal placée)
       const index = secretArray.indexOf(letter);
@@ -224,39 +202,6 @@ async function colorRowAndGetCorrect() {
         if (keyElement &&
             !keyElement.classList.contains("correct") && // ne pas rétrograder un vert
             !keyElement.classList.contains("present")) { // ne pas rétrograder un jaune
-=======
-    }
-
-    // ========================
-    // Étape 3 : marquer les lettres PRÉSENTES mais mal placées (present)
-    // ========================
-    for (let i = 0; i < WORD_LENGTH; i++) {
-      const letter = guessArray[i];
-      if (!letter) continue; // si déjà marqué correct, on saute
-
-      // Vérifie si la lettre est encore dans le mot secret (mal placée)
-      const index = secretArray.indexOf(letter);
-
-      if (index !== -1) {
-        rowCells[i].classList.add("present"); // couleur jaune sur la grille
-        secretArray[index] = null;            // on "consomme" la lettre du mot secret
-
-        // Colore la touche correspondante du clavier
-        const keyElement = document.querySelector(`.key[data-key="${letter}"]`);
-        if (keyElement && !keyElement.classList.contains("correct")) {
-          keyElement.classList.remove("absent");
-          keyElement.classList.add("present"); // couleur jaune
-        }
-
-      } else {
-        // Lettre absente du mot secret
-        rowCells[i].classList.add("absent"); // couleur grise sur la grille
-
-        const keyElement = document.querySelector(`.key[data-key="${letter}"]`);
-        if (keyElement &&
-          !keyElement.classList.contains("correct") && // ne pas rétrograder un vert
-          !keyElement.classList.contains("present")) { // ne pas rétrograder un jaune
->>>>>>> 449628c (intro)
           keyElement.classList.add("absent");           // couleur grise
         }
       }
