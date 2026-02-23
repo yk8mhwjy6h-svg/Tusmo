@@ -28,6 +28,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const enter = document.getElementById("buttonEnter");
   const attempt = document.getElementById("attempt");
   const cursor = document.querySelector(".cyber-cursor");
+  const playWin = document.getElementById("playWin");
+  const playCount = document.getElementById("playCount");
 
   // bouton restart 
   const restartBtn = document.getElementById("restartBtn");
@@ -38,7 +40,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const soundFail = new Audio("assets/soundfail.mp3");
   const soundWin = new Audio("assets/win.mp3");
-  // const soundFault = new Audio("assets/soundfault.mp3");
   const greenCell = new Audio("assets/greenCell.mp3");
   const yellowCell = new Audio("assets/yellowCell.mp3");
   const greyCell = new Audio("assets/greyCell.mp3");
@@ -59,6 +60,8 @@ document.addEventListener("DOMContentLoaded", function () {
   let currentRow = 0;
   let currentCol = 0;
   let compteur = 6;
+  let compteurWin = 0;
+  let compteurPlay = 0;
 
   // init : toutes les cases non verrouillées par défaut
   document.querySelectorAll(".cell").forEach(cell => {
@@ -262,15 +265,18 @@ async function colorRowAndGetCorrect() {
 
     if (isWinner) {
       // Attendre que le dernier son greenCell.mp3 soit terminé avant de jouer soundWin
-      soundWin.play();
       setTimeout(() => {
+        soundWin.play();
         alert("Félicitations ! Vous avez trouvé le mot secret : " + secret);
       }, 500);
+      compteurWin++;
+      playWin.textContent = "Parties gagnées : " + compteurWin;
       return;
     }
 
     compteur--;
     attempt.textContent = "Tentatives restantes : " + compteur;
+    
 
     if (compteur <= 0) {
       soundFail.play();
@@ -324,6 +330,10 @@ async function colorRowAndGetCorrect() {
     // reset état
     currentRow = 0;
     compteur = 6;
+
+    // Incrementer le compteur de parties jouées
+    compteurPlay++;
+    playCount.textContent = "Parties jouées : " + compteurPlay;
 
     // vider la grille + enlever couleurs + déverrouiller
     document.querySelectorAll(".cell").forEach(cell => {
@@ -387,3 +397,96 @@ async function colorRowAndGetCorrect() {
 
   currentCol = moveToNextFreeCol();
 });
+
+// ============================================================
+  // LOCAL STORAGE 
+  // ============================================================
+
+// Appeler saveBestScore(compteur) à la fin de submitRow() si le joueur gagne ou perd, pour enregistrer le score. Vous pouvez aussi afficher le meilleur score dans l'interface utilisateur si vous le souhaitez.
+
+function submitRow() {
+  // ... code existant ...
+
+  if (isWinner) {
+    soundWin.play();
+    saveBestScore(compteur); // Enregistre le score si le joueur gagne
+    setTimeout(() => {
+      alert("Félicitations ! Vous avez trouvé le mot secret : " + secret);
+    }, 500);
+    return;
+  }
+
+  if (compteur <= 0) {
+    soundFail.play();
+    saveBestScore(compteur); // Enregistre le score si le joueur perd
+    setTimeout(() => {
+      alert("Dommage ! Le mot secret était : " + secret);
+    }, 500);
+    return;
+  }
+
+  // ... code existant ...
+}   
+
+// Vous pouvez aussi afficher le meilleur score dans l'interface utilisateur, par exemple dans un élément avec l'id "bestScore":
+
+const bestScoreElement = document.getElementById("bestScore");
+if (bestScoreElement) {
+  const bestScore = getBestScore();
+  if (bestScore) {
+    bestScoreElement.textContent = "Meilleur score : " + bestScore + " tentatives restantes";
+  } else {
+    bestScoreElement.textContent = "Meilleur score : N/A";
+  }
+}   
+
+// Local storage de l'etat de la game pour permettre au joueur de revenir à sa partie en cours même après avoir fermé l'onglet ou le navigateur. Vous pouvez stocker des informations telles que le mot secret, les tentatives restantes, la grille actuelle, etc. dans le local storage et les récupérer lors du chargement de la page pour restaurer l'état du jeu.
+
+function saveGameState() {
+  const gameState = {
+    secret: secret,
+    currentRow: currentRow,
+    compteur: compteur,
+    grid: Array.from(document.querySelectorAll(".cell")).map(cell => ({
+      text: cell.innerText,
+      locked: cell.dataset.locked,
+      classes: cell.className
+    })),
+    keys: Array.from(keys).map(key => ({
+      key: key.dataset.key,
+      classes: key.className
+    }))
+  };
+  localStorage.setItem("motusGameState", JSON.stringify(gameState));
+}
+
+function loadGameState() {
+  const savedState = localStorage.getItem("motusGameState");
+  if (savedState) {
+    const gameState = JSON.parse(savedState);
+    secret = gameState.secret;
+    currentRow = gameState.currentRow;
+    compteur = gameState.compteur;
+
+    // Restaurer la grille
+    const cells = document.querySelectorAll(".cell");
+    gameState.grid  .forEach((cellState, index) => {
+      cells[index].innerText = cellState.text;
+      cells[index].dataset.locked = cellState.locked;
+      cells[index].className = cellState.classes;
+    });
+
+    // Restaurer les touches du clavier
+    keys.forEach(key => {
+      const keyState = gameState.keys.find(k => k.key === key.dataset.key);
+      if (keyState) {
+        key.className = keyState.classes;
+      }
+    });
+
+    // Mettre à jour l'affichage des tentatives restantes
+    attempt.textContent = "Tentatives restantes : " + compteur;
+  }
+}
+
+// 
