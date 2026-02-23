@@ -473,3 +473,13 @@ async function colorRowAndGetCorrect() {
     currentCol = moveToNextFreeCol();
   }
 });
+
+  attempt.textContent = "Tentatives restantes : " + compteur;
+
+  const firstLetter = secret[0];
+  const firstCell = getRowCells(0)[0];
+  firstCell.innerText = firstLetter;
+  firstCell.dataset.locked = "1";
+
+  currentCol = moveToNextFreeCol(); 
+  
