@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // ============================================================
 
   const soundFail = new Audio("assets/soundfail.mp3");
-  const soundWin = new Audio("assets/soundWin.mp3");
+  const soundWin = new Audio("assets/win.mp3");
   // const soundFault = new Audio("assets/soundfault.mp3");
   const greenCell = new Audio("assets/greenCell.mp3");
   const yellowCell = new Audio("assets/yellowCell.mp3");
@@ -261,8 +261,11 @@ async function colorRowAndGetCorrect() {
     const correctLetters = await colorRowAndGetCorrect();
 
     if (isWinner) {
-      // soundWin.play();
-      alert("Félicitations ! Vous avez trouvé le mot secret : " + secret);
+      // Attendre que le dernier son greenCell.mp3 soit terminé avant de jouer soundWin
+      setTimeout(() => {
+        soundWin.play();
+        alert("Félicitations ! Vous avez trouvé le mot secret : " + secret);
+      }, 300);
       return;
     }
 
@@ -344,7 +347,11 @@ async function colorRowAndGetCorrect() {
     attempt.textContent = "Tentatives restantes : " + compteur;
   }
 
-    restartBtn.addEventListener("click", resetGame);
+    restartBtn.addEventListener("click", () => {
+      restartBtn.disabled = true;
+      resetGame();
+      restartBtn.disabled = false;
+    });
 
   // ============================================================
   // ÉVÉNEMENTS
