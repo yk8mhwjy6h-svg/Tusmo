@@ -330,8 +330,8 @@ async function colorRowAndGetCorrect() {
 
     if (isWinner) {
       // Attendre que le dernier son greenCell.mp3 soit terminé avant de jouer soundWin
+      soundWin.play();
       setTimeout(() => {
-        soundWin.play();
         alert("Félicitations ! Vous avez trouvé le mot secret : " + secret);
       }, 500);
       compteurWin++;
