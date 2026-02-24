@@ -416,6 +416,26 @@ Titre 1 et 2
   color: #000;
 }
 
+#resetStatsBtn{
+  padding: 12px 18px;
+  font-family: "Audiowide", sans-serif;
+  font-size: 1rem;
+  background: rgba(0, 0, 0, 0.458) ;
+  border: 2px solid var(--neon-pink);
+  color: var(--neon-pink);
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 0 12px var(--neon-pink);
+  top: 38%;
+  right: 5%;
+  position: absolute;
+}
+
+#resetStatsBtn:hover{
+  background: var(--neon-pink);
+  color: #000;
+}
+
 
 #startScreen {
   position: fixed;

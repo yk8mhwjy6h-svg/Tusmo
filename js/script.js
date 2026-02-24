@@ -487,6 +487,18 @@ async function colorRowAndGetCorrect() {
     // si un état a été chargé, s'assurer que le curseur pointe sur la bonne colonne
     currentCol = moveToNextFreeCol();
   }
+  function resetStats() {
+    if (confirm("Êtes-vous sûr de vouloir réinitialiser les statistiques ?")) {
+      resetGame();
+      compteurWin = 0;
+      compteurPlay = 0;
+      playWin.textContent = "Parties gagnées : " + compteurWin;
+      playCount.textContent = "Parties jouées : " + compteurPlay;
+      saveState();
+    }
+  }
+  const resetStatsBtn = document.getElementById("resetStatsBtn");
+  resetStatsBtn.addEventListener("click", resetStats);
 });
 
 
