@@ -1,7 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
+<<<<<<< HEAD
   // ============================================================
   // START SCREEN
   // ============================================================
+=======
+  localStorage.removeItem("tusmo_state");
+
+  // bouton de démarage"
+>>>>>>> 58fa26e2a42f6ac287ce5eb5959494bc40d9726c
   const startScreen = document.getElementById("startScreen");
   const startBtn = document.getElementById("startBtn");
   const soundSkeleton = new Audio("assets/soundSkeleton.mp3");
@@ -539,5 +545,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
   updateHUD();
   console.log("secret FINAL:", secret);
+  function resetStats() {
+    if (confirm("Êtes-vous sûr de vouloir réinitialiser les statistiques ?")) {
+      resetGame();
+      compteurWin = 0;
+      compteurPlay = 0;
+      playWin.textContent = "Parties gagnées : " + compteurWin;
+      playCount.textContent = "Parties jouées : " + compteurPlay;
+      saveState();
+    }
+  }
+  const resetStatsBtn = document.getElementById("resetStatsBtn");
+  resetStatsBtn.addEventListener("click", resetStats);
 });
   
