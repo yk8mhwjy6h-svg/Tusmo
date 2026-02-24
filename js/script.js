@@ -1,13 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
-<<<<<<< HEAD
   // ============================================================
   // START SCREEN
   // ============================================================
-=======
-  localStorage.removeItem("tusmo_state");
-
-  // bouton de démarage"
->>>>>>> 58fa26e2a42f6ac287ce5eb5959494bc40d9726c
   const startScreen = document.getElementById("startScreen");
   const startBtn = document.getElementById("startBtn");
   const soundSkeleton = new Audio("assets/soundSkeleton.mp3");
@@ -306,6 +300,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const correctLetters = Array(WORD_LENGTH).fill("");
     const secretArray = secret.split("");
     const guessArray = [];
+    const cellStates = Array(WORD_LENGTH).fill("");
 
     // récupérer guess + reset classes
     for (let i = 0; i < WORD_LENGTH; i++) {
@@ -313,51 +308,54 @@ document.addEventListener("DOMContentLoaded", function () {
       rowCells[i].classList.remove("correct", "present", "absent");
     }
 
-    // passe 1 : verts (on consomme)
+    // Passe 1 invisible : identifier les verts pour éviter les doublons
     for (let i = 0; i < WORD_LENGTH; i++) {
-      const letter = guessArray[i];
+      if (guessArray[i] === secretArray[i]) {
+        cellStates[i] = "correct";
+        correctLetters[i] = guessArray[i];
+        secretArray[i] = null;
+      }
+    }
 
+    // Passe 2 invisible : identifier les jaunes et gris
+    for (let i = 0; i < WORD_LENGTH; i++) {
+      if (cellStates[i] !== "") continue; // déjà marqué vert
+
+      const letter = guessArray[i];
+      const idx = secretArray.indexOf(letter);
+      if (idx !== -1) {
+        cellStates[i] = "present";
+        secretArray[idx] = null;
+      } else {
+        cellStates[i] = "absent";
+      }
+    }
+
+    // Passe 3 : Coloration une à une, de gauche à droite
+    for (let i = 0; i < WORD_LENGTH; i++) {
       await new Promise(res => setTimeout(res, 230));
 
-      if (letter === secretArray[i]) {
-        rowCells[i].classList.add("correct");
+      const state = cellStates[i];
+      rowCells[i].classList.add(state);
+
+      // Jouer le son et mettre à jour le clavier
+      if (state === "correct") {
         safePlay(greenCell);
-
-        correctLetters[i] = letter;
-        secretArray[i] = null;
-        guessArray[i] = null;
-
-        const keyEl = findKeyByLetter(letter);
+        const keyEl = findKeyByLetter(guessArray[i]);
         if (keyEl) {
           keyEl.classList.remove("present", "absent");
           keyEl.classList.add("correct");
         }
-      }
-    }
-
-    // passe 2 : jaunes / gris (on consomme)
-    for (let i = 0; i < WORD_LENGTH; i++) {
-      const letter = guessArray[i];
-      if (!letter) continue; // déjà traité en vert
-
-      await new Promise(res => setTimeout(res, 230));
-
-      const idx = secretArray.indexOf(letter);
-      if (idx !== -1) {
-        rowCells[i].classList.add("present");
+      } else if (state === "present") {
         safePlay(yellowCell);
-        secretArray[idx] = null;
-
-        const keyEl = findKeyByLetter(letter);
+        const keyEl = findKeyByLetter(guessArray[i]);
         if (keyEl && !keyEl.classList.contains("correct")) {
           keyEl.classList.remove("absent");
           keyEl.classList.add("present");
         }
-      } else {
-        rowCells[i].classList.add("absent");
+      } else if (state === "absent") {
         safePlay(greyCell);
-
-        const keyEl = findKeyByLetter(letter);
+        const keyEl = findKeyByLetter(guessArray[i]);
         if (
           keyEl &&
           !keyEl.classList.contains("correct") &&
