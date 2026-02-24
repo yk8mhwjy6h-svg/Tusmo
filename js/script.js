@@ -1,43 +1,55 @@
 document.addEventListener("DOMContentLoaded", function () {
-
-  // bouton de démarage"
+  // ============================================================
+  // START SCREEN
+  // ============================================================
   const startScreen = document.getElementById("startScreen");
   const startBtn = document.getElementById("startBtn");
-  const soundSkeleton = new Audio("../assets/soundSkeleton.mp3")
+  const soundSkeleton = new Audio("assets/soundSkeleton.mp3");
 
-  startBtn.addEventListener("click", () => {
-    soundSkeleton.play()
-    startScreen.classList.add("hide");
-    startScreen.addEventListener("transitionend", () => {
-      startScreen.remove();
-    }, { once: true });
-  });
-  // ============================================================
-  // CONSTANTES ET CONFIGURATION
-  // ============================================================
+  if (startBtn && startScreen) {
+    startBtn.addEventListener("click", () => {
+      try { soundSkeleton.currentTime = 0; soundSkeleton.play(); } catch {}
+      startScreen.classList.add("hide");
+      startScreen.addEventListener(
+        "transitionend",
+        () => startScreen.remove(),
+        { once: true }
+      );
+    });
+  }
 
+  // ============================================================
+  // CONSTANTES
+  // ============================================================
   const WORD_LENGTH = 5;
+  const MAX_ATTEMPTS = 6;
+
+  // ⚠️ IMPORTANT : WORD_LIST doit exister (tu l'as sûrement dans un autre fichier)
+  // Exemple : const WORD_LIST = ["ABIME","ABORD", ...]
+  if (typeof WORD_LIST === "undefined" || !Array.isArray(WORD_LIST) || WORD_LIST.length === 0) {
+    console.error("WORD_LIST est introuvable. Déclare WORD_LIST avant ce script.");
+    return;
+  }
+
+  const AuthorizedWords = new Set(WORD_LIST.map(w => String(w).toUpperCase()));
 
   // ============================================================
-  // ÉLÉMENTS DU DOM
+  // DOM
   // ============================================================
-
   const rows = document.querySelectorAll(".grid .row");
-  const keys = document.querySelectorAll(".key");
+  const keys = Array.from(document.querySelectorAll(".key"));
   const del = document.getElementById("buttonReturn");
   const enter = document.getElementById("buttonEnter");
   const attempt = document.getElementById("attempt");
   const cursor = document.querySelector(".cyber-cursor");
+  const restartBtn = document.getElementById("restartBtn");
+
   const playWin = document.getElementById("playWin");
   const playCount = document.getElementById("playCount");
-
-  // bouton restart 
-  const restartBtn = document.getElementById("restartBtn");
 
   // ============================================================
   // AUDIO
   // ============================================================
-
   const soundFail = new Audio("assets/soundfail.mp3");
   const soundWin = new Audio("assets/win.mp3");
   const greenCell = new Audio("assets/greenCell.mp3");
@@ -45,123 +57,197 @@ document.addEventListener("DOMContentLoaded", function () {
   const greyCell = new Audio("assets/greyCell.mp3");
 
   // ============================================================
-  // ÉTAT DU JEU
+  // LOCAL STORAGE KEYS
   // ============================================================
+  const LS_STATE = "tusmo_state";
+  const LS_STATS = "tusmo_stats";
 
-  function getRandomWord() {
-    return WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)].toUpperCase();
-  }
-
-  const AuthorizedWords = new Set(WORD_LIST);
-
-  let secret = getRandomWord();
-  console.log("secret:", secret);
-
+  // ============================================================
+  // ETAT DU JEU
+  // ============================================================
+  let secret = "";
   let currentRow = 0;
   let currentCol = 0;
-  let compteur = 6;
-  let compteurWin = 0;
-  let compteurPlay = 0;
+  let compteur = MAX_ATTEMPTS;
 
-  // init : toutes les cases non verrouillées par défaut
-  document.querySelectorAll(".cell").forEach(cell => {
-    cell.dataset.locked = "0";
-  });
+  let compteurWin = 0;   // stats
+  let compteurPlay = 0;  // stats
 
   // ============================================================
-  // PERSISTENCE (localStorage)
+  // OUTILS
   // ============================================================
-
-  function saveState() {
-    try {
-      const cells = Array.from(document.querySelectorAll(".cell")).map(c => ({
-  t: c.innerText,
-  locked: c.dataset.locked,
-  state: c.classList.contains("correct") ? "correct"
-       : c.classList.contains("present") ? "present"
-       : c.classList.contains("absent")  ? "absent"
-       : ""
-}));
-      const keysState = Array.from(keys).map(k => k.className);
-      const state = { secret, currentRow, currentCol, compteur, compteurWin, compteurPlay, cells, keysState };
-      localStorage.setItem("tusmo_state", JSON.stringify(state));
-    } catch (e) {
-      console.error('Erreur saveState', e);
-    }
+  function pickSecret() {
+    return String(WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)]).toUpperCase();
   }
-
-  function loadState() {
-    try {
-      const raw = localStorage.getItem("tusmo_state");
-      if (!raw) return false;
-      const state = JSON.parse(raw);
-      if (!state) return false;
-
-      // Restaurer valeurs simples
-      secret = state.secret || secret;
-      currentRow = (typeof state.currentRow === 'number') ? state.currentRow : 0;
-      currentCol = (typeof state.currentCol === 'number') ? state.currentCol : 0;
-      compteur = (typeof state.compteur === 'number') ? state.compteur : compteur;
-      compteurWin = (typeof state.compteurWin === 'number') ? state.compteurWin : 0;
-      compteurPlay = (typeof state.compteurPlay === 'number') ? state.compteurPlay : 0;
-
-      // Restaurer cellules
-     const cells = document.querySelectorAll(".cell");
-if (state.cells && Array.isArray(state.cells)) {
-  state.cells.forEach((c, i) => {
-    if (!cells[i]) return;
-
-    cells[i].innerText = c.t || "";
-    cells[i].dataset.locked = c.locked || "0";
-
-    // restaurer couleur
-    cells[i].classList.remove("correct", "present", "absent");
-    if (c.state) cells[i].classList.add(c.state);
-  });
-}
-
-      // Restaurer état clavier si présent
-      if (Array.isArray(state.keysState)) {
-        Array.from(keys).forEach((k, i) => {
-          if (state.keysState[i] !== undefined) k.className = state.keysState[i];
-        });
-      }
-
-      // Mettre à jour affichages
-      attempt.textContent = "Tentatives restantes : " + compteur;
-      playWin.textContent = "Parties gagnées : " + compteurWin;
-      playCount.textContent = "Parties jouées : " + compteurPlay;
-
-      return true;
-    } catch (e) {
-      console.error('Erreur loadState', e);
-      return false;
-    }
-  }
-
-  // ============================================================
-  // FONCTIONS UTILITAIRES
-  // ============================================================
 
   function getRowCells(r) {
     return rows[r].querySelectorAll(".cell");
+  }
+
+  function initCellsLockedDefault() {
+    document.querySelectorAll(".cell").forEach(cell => {
+      if (!cell.dataset.locked) cell.dataset.locked = "0";
+    });
   }
 
   function moveToNextFreeCol() {
     const rowCells = getRowCells(currentRow);
     let i = 0;
     while (i < WORD_LENGTH && rowCells[i].dataset.locked === "1") i++;
-    return i;
+    return i; // peut valoir 5
+  }
+
+  function findKeyByLetter(letter) {
+    // tes touches n'ont pas data-key => on compare le texte
+    return keys.find(k => k.textContent.trim().toUpperCase() === letter);
+  }
+
+  function updateHUD() {
+    if (attempt) attempt.textContent = "Tentatives restantes : " + compteur;
+    if (playWin) playWin.textContent = "Parties gagnées : " + compteurWin;
+    if (playCount) playCount.textContent = "Parties jouées : " + compteurPlay;
+  }
+
+  function safePlay(audio) {
+    try {
+      audio.currentTime = 0;
+      audio.play();
+    } catch {}
   }
 
   // ============================================================
-  // FONCTIONS DE GAMEPLAY
+  // STATS (persistantes)
   // ============================================================
+  function loadStats() {
+    try {
+      const raw = localStorage.getItem(LS_STATS);
+      if (!raw) return;
+      const s = JSON.parse(raw);
+      if (!s) return;
+      compteurWin = typeof s.wins === "number" ? s.wins : 0;
+      compteurPlay = typeof s.plays === "number" ? s.plays : 0;
+    } catch {}
+  }
 
+  function saveStats() {
+    try {
+      localStorage.setItem(LS_STATS, JSON.stringify({ wins: compteurWin, plays: compteurPlay }));
+    } catch {}
+  }
+
+  // ============================================================
+  // SAUVEGARDE / CHARGEMENT PARTIE (grille + clavier + secret)
+  // ============================================================
+  function getCellState(cell) {
+    return cell.classList.contains("correct") ? "correct"
+      : cell.classList.contains("present") ? "present"
+      : cell.classList.contains("absent") ? "absent"
+      : "";
+  }
+
+  function saveState() {
+    try {
+      const cells = Array.from(document.querySelectorAll(".cell")).map(c => ({
+        t: c.innerText || "",
+        locked: c.dataset.locked || "0",
+        state: getCellState(c)
+      }));
+
+      const keysState = keys.map(k => ({
+        // on garde juste l'état (pas besoin de tout className)
+        correct: k.classList.contains("correct"),
+        present: k.classList.contains("present"),
+        absent: k.classList.contains("absent")
+      }));
+
+      const state = {
+        secret,
+        currentRow,
+        currentCol,
+        compteur,
+        cells,
+        keysState
+      };
+
+      localStorage.setItem(LS_STATE, JSON.stringify(state));
+    } catch (e) {
+      console.error("Erreur saveState", e);
+    }
+  }
+
+  function applyKeyStateFromSaved(keysState) {
+    if (!Array.isArray(keysState)) return;
+    keys.forEach((k, i) => {
+      if (!keysState[i]) return;
+      k.classList.remove("correct", "present", "absent");
+      if (keysState[i].absent) k.classList.add("absent");
+      if (keysState[i].present) k.classList.add("present");
+      if (keysState[i].correct) k.classList.add("correct");
+    });
+  }
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(LS_STATE);
+      if (!raw) return false;
+      const state = JSON.parse(raw);
+      if (!state || !state.secret) return false;
+
+      secret = state.secret;
+      currentRow = typeof state.currentRow === "number" ? state.currentRow : 0;
+      currentCol = typeof state.currentCol === "number" ? state.currentCol : 0;
+      compteur = typeof state.compteur === "number" ? state.compteur : MAX_ATTEMPTS;
+
+      // cellules
+      const domCells = document.querySelectorAll(".cell");
+      if (Array.isArray(state.cells)) {
+        state.cells.forEach((c, i) => {
+          const cell = domCells[i];
+          if (!cell) return;
+          cell.innerText = c.t || "";
+          cell.dataset.locked = c.locked || "0";
+          cell.classList.remove("correct", "present", "absent");
+          if (c.state) cell.classList.add(c.state);
+        });
+      }
+
+      // clavier
+      applyKeyStateFromSaved(state.keysState);
+
+      // recalcul col à partir des lock
+      currentCol = moveToNextFreeCol();
+
+      updateHUD();
+      return true;
+    } catch (e) {
+      console.error("Erreur loadState", e);
+      return false;
+    }
+  }
+
+  function clearBoard() {
+    document.querySelectorAll(".cell").forEach(cell => {
+      cell.innerText = "";
+      cell.dataset.locked = "0";
+      cell.classList.remove("correct", "present", "absent");
+    });
+    keys.forEach(k => k.classList.remove("correct", "present", "absent"));
+  }
+
+  function lockFirstLetter() {
+    const firstCell = getRowCells(0)[0];
+    firstCell.innerText = secret[0];
+    firstCell.dataset.locked = "1";
+  }
+
+  // ============================================================
+  // GAMEPLAY
+  // ============================================================
   function addLetter(letter) {
     if (currentRow >= rows.length) return;
 
     const rowCells = getRowCells(currentRow);
+
     while (currentCol < WORD_LENGTH && rowCells[currentCol].dataset.locked === "1") {
       currentCol++;
     }
@@ -173,19 +259,20 @@ if (state.cells && Array.isArray(state.cells)) {
     while (currentCol < WORD_LENGTH && rowCells[currentCol].dataset.locked === "1") {
       currentCol++;
     }
-    // sauvegarde de l'état après saisie
+
     saveState();
   }
 
   function deleteLetter() {
     const rowCells = getRowCells(currentRow);
     let i = currentCol - 1;
+
     while (i >= 0 && rowCells[i].dataset.locked === "1") i--;
     if (i < 0) return;
 
     rowCells[i].innerText = "";
     currentCol = i;
-    // sauvegarde de l'état après suppression
+
     saveState();
   }
 
@@ -194,112 +281,95 @@ if (state.cells && Array.isArray(state.cells)) {
     for (let i = 0; i < WORD_LENGTH; i++) {
       if (rowCells[i].innerText === "") {
         alert("Vous devez insérer 5 lettres !");
-        // Efface automatiquement les lettres de la ligne
+        // efface seulement non verrouillées
         for (let j = 0; j < WORD_LENGTH; j++) {
-          if (rowCells[j].dataset.locked !== "1") {
-            rowCells[j].innerText = "";
-          }
+          if (rowCells[j].dataset.locked !== "1") rowCells[j].innerText = "";
         }
-        currentCol = 0;
+        currentCol = moveToNextFreeCol();
+        saveState();
         return false;
       }
     }
     return true;
   }
 
-async function colorRowAndGetCorrect() {
-  // Récupère toutes les cellules de la ligne courante
-  const rowCells = getRowCells(currentRow);
+  // Coloration avec gestion des doublons + animation
+  async function colorRowAndGetCorrect() {
+    const rowCells = getRowCells(currentRow);
 
-    // Tableau pour mémoriser les lettres correctes à transmettre à la prochaine ligne
     const correctLetters = Array(WORD_LENGTH).fill("");
-
-    // Copie du mot secret pour "consommer" les lettres au fur et à mesure
     const secretArray = secret.split("");
-
-    // Tableau temporaire pour le mot deviné par le joueur
     const guessArray = [];
 
-    // ========================
-    // Étape 1 : récupérer le mot deviné
-    // ========================
+    // récupérer guess + reset classes
     for (let i = 0; i < WORD_LENGTH; i++) {
-      guessArray.push(rowCells[i].innerText);   // on stocke chaque lettre de la ligne
-      rowCells[i].classList.remove("correct", "present", "absent"); // on nettoie les anciennes classes
+      guessArray.push(rowCells[i].innerText);
+      rowCells[i].classList.remove("correct", "present", "absent");
     }
 
-  // ========================
-  // Étape 2 : traiter chaque case une par une (dans l'ordre)
-  // ========================
-  for (let i = 0; i < WORD_LENGTH; i++) {
-    const letter = guessArray[i];
+    // passe 1 : verts (on consomme)
+    for (let i = 0; i < WORD_LENGTH; i++) {
+      const letter = guessArray[i];
 
-    await new Promise(resolve => setTimeout(resolve, 230)); // délai pour l'effet de rebond
+      await new Promise(res => setTimeout(res, 230));
 
-    // Si la lettre correspond exactement à celle du mot secret à la même position
-    if (letter === secretArray[i]) {
-      rowCells[i].classList.add("correct");   // couleur verte sur la grille
-      greenCell.currentTime = 0;
-      greenCell.play();                       // joue le son green
-      correctLetters[i] = letter;             // mémorise pour la prochaine ligne
-      secretArray[i] = null;                  // on "consomme" la lettre du mot secret
-      guessArray[i] = null;                   // on la supprime du mot deviné temporaire
+      if (letter === secretArray[i]) {
+        rowCells[i].classList.add("correct");
+        safePlay(greenCell);
 
-        // Colore la touche correspondante du clavier
-        const keyElement = document.querySelector(`.key[data-key="${letter}"]`);
-        if (keyElement) {
-          keyElement.classList.remove("present", "absent"); // retire les anciennes couleurs
-          keyElement.classList.add("correct");              // couleur verte
+        correctLetters[i] = letter;
+        secretArray[i] = null;
+        guessArray[i] = null;
+
+        const keyEl = findKeyByLetter(letter);
+        if (keyEl) {
+          keyEl.classList.remove("present", "absent");
+          keyEl.classList.add("correct");
         }
       }
-    else if (letter) {
-      // Vérifie si la lettre est encore dans le mot secret (mal placée)
-      const index = secretArray.indexOf(letter);
+    }
 
-      if (index !== -1) {
-        rowCells[i].classList.add("present"); // couleur jaune sur la grille
-        yellowCell.currentTime = 0;
-        yellowCell.play();                    // joue le son yellow
-        secretArray[index] = null;            // on "consomme" la lettre du mot secret
+    // passe 2 : jaunes / gris (on consomme)
+    for (let i = 0; i < WORD_LENGTH; i++) {
+      const letter = guessArray[i];
+      if (!letter) continue; // déjà traité en vert
 
-        // Colore la touche correspondante du clavier
-        const keyElement = document.querySelector(`.key[data-key="${letter}"]`);
-        if (keyElement && !keyElement.classList.contains("correct")) {
-          keyElement.classList.remove("absent");
-          keyElement.classList.add("present"); // couleur jaune
+      await new Promise(res => setTimeout(res, 230));
+
+      const idx = secretArray.indexOf(letter);
+      if (idx !== -1) {
+        rowCells[i].classList.add("present");
+        safePlay(yellowCell);
+        secretArray[idx] = null;
+
+        const keyEl = findKeyByLetter(letter);
+        if (keyEl && !keyEl.classList.contains("correct")) {
+          keyEl.classList.remove("absent");
+          keyEl.classList.add("present");
         }
-
       } else {
-        // Lettre absente du mot secret
+        rowCells[i].classList.add("absent");
+        safePlay(greyCell);
 
-        rowCells[i].classList.add("absent"); // couleur grise sur la grille
-        greyCell.currentTime = 0;
-        greyCell.play();                     // joue le son grey
-
-        const keyElement = document.querySelector(`.key[data-key="${letter}"]`);
-        if (keyElement &&
-            !keyElement.classList.contains("correct") && // ne pas rétrograder un vert
-            !keyElement.classList.contains("present")) { // ne pas rétrograder un jaune
-          keyElement.classList.add("absent");           // couleur grise
+        const keyEl = findKeyByLetter(letter);
+        if (
+          keyEl &&
+          !keyEl.classList.contains("correct") &&
+          !keyEl.classList.contains("present")
+        ) {
+          keyEl.classList.add("absent");
         }
       }
     }
+
+    saveState();
+    return correctLetters;
   }
-
-  // Sauvegarder immédiatement pour persister les couleurs des cellules et du clavier
-  saveState();
-
-  // On renvoie les lettres correctes pour bloquer la prochaine ligne
-  return correctLetters;
-}
-
-
 
   function applyCorrectToNextRow(correctLetters) {
     if (currentRow + 1 >= rows.length) return;
 
     const nextCells = getRowCells(currentRow + 1);
-
     for (let i = 0; i < WORD_LENGTH; i++) {
       if (correctLetters[i]) {
         nextCells[i].innerText = correctLetters[i];
@@ -308,7 +378,6 @@ async function colorRowAndGetCorrect() {
         nextCells[i].dataset.locked = "0";
       }
     }
-    // Sauvegarder après application des lettres correctes à la prochaine ligne
     saveState();
   }
 
@@ -316,26 +385,18 @@ async function colorRowAndGetCorrect() {
     if (!rowIsFull()) return;
 
     const rowCells = getRowCells(currentRow);
-    const letters = Array.from(rowCells).map(c => c.innerText);
-    const guess = letters.join("");
+    const guess = Array.from(rowCells).map(c => c.innerText).join("");
 
-    // Vérifie si le mot deviné est dans la liste des mots autorisés
     if (!AuthorizedWords.has(guess)) {
       alert("Mot non reconnu !");
-      // Efface automatiquement les lettres non verrouillées de la ligne
       rowCells.forEach(cell => {
         if (cell.dataset.locked !== "1") {
           cell.classList.remove("correct", "present", "absent");
           cell.innerText = "";
         }
       });
-      // Remet le curseur à la deuxième case (index 1). Si elle est verrouillée,
-      // place le curseur sur la prochaine case libre.
-      if (rowCells[1] && rowCells[1].dataset.locked !== "1") {
-        currentCol = 1;
-      } else {
-        currentCol = moveToNextFreeCol();
-      }
+      currentCol = moveToNextFreeCol();
+      saveState();
       return;
     }
 
@@ -344,122 +405,110 @@ async function colorRowAndGetCorrect() {
     const correctLetters = await colorRowAndGetCorrect();
 
     if (isWinner) {
-      // Attendre que le dernier son greenCell.mp3 soit terminé avant de jouer soundWin
-      soundWin.play();
-      setTimeout(() => {
-        alert("Félicitations ! Vous avez trouvé le mot secret : " + secret);
-      }, 500);
+      safePlay(soundWin);
+      setTimeout(() => alert("Félicitations ! Vous avez trouvé le mot secret : " + secret), 400);
+
       compteurWin++;
-      playWin.textContent = "Parties gagnées : " + compteurWin;
+      saveStats();
+
+      // on peut garder l'état (ou pas). Ici on sauvegarde juste stats + état courant
+      updateHUD();
       saveState();
       return;
     }
 
     compteur--;
-    attempt.textContent = "Tentatives restantes : " + compteur;
-    
+    updateHUD();
 
     if (compteur <= 0) {
-      soundFail.play();
-      setTimeout(() => {
-        alert("Dommage ! Le mot secret était : " + secret);
-      }, 500);
+      safePlay(soundFail);
+      setTimeout(() => alert("Dommage ! Le mot secret était : " + secret), 400);
       saveState();
       return;
     }
 
-
     applyCorrectToNextRow(correctLetters);
+
     currentRow++;
+    if (currentRow >= rows.length) {
+      saveState();
+      return;
+    }
+
     currentCol = moveToNextFreeCol();
-    // sauvegarde après soumission et déplacement de ligne
     saveState();
   }
 
   // ============================================================
-  // CURSEUR PERSONNALISÉ
+  // CURSEUR
   // ============================================================
-
-  document.addEventListener("mousemove", (e) => {
-    cursor.style.left = e.clientX + "px";
-    cursor.style.top = e.clientY + "px";
-  });
-
-  document.addEventListener("mousedown", () => {
-    cursor.style.transform = "translate(-50%, -50%) scale(0.7)";
-  });
-
-  document.addEventListener("mouseup", () => {
-    cursor.style.transform = "translate(-50%, -50%) scale(1)";
-  });
-
-  document.querySelectorAll("a, button, .key").forEach((el) => {
-    el.addEventListener("mouseenter", () => {
-      cursor.style.borderColor = "var(--neon-pink)";
-      cursor.style.boxShadow = "0 0 20px var(--neon-pink)";
+  if (cursor) {
+    document.addEventListener("mousemove", (e) => {
+      cursor.style.left = e.clientX + "px";
+      cursor.style.top = e.clientY + "px";
     });
-    el.addEventListener("mouseleave", () => {
-      cursor.style.borderColor = "var(--neon-blue)";
-      cursor.style.boxShadow = "0 0 12px var(--neon-blue)";
+
+    document.addEventListener("mousedown", () => {
+      cursor.style.transform = "translate(-50%, -50%) scale(0.7)";
     });
-  });
 
-  // BOUTON RECOMMENCER 
+    document.addEventListener("mouseup", () => {
+      cursor.style.transform = "translate(-50%, -50%) scale(1)";
+    });
 
+    document.querySelectorAll("a, button, .key").forEach((el) => {
+      el.addEventListener("mouseenter", () => {
+        cursor.style.borderColor = "var(--neon-pink)";
+        cursor.style.boxShadow = "0 0 20px var(--neon-pink)";
+      });
+      el.addEventListener("mouseleave", () => {
+        cursor.style.borderColor = "var(--neon-blue)";
+        cursor.style.boxShadow = "0 0 12px var(--neon-blue)";
+      });
+    });
+  }
+
+  // ============================================================
+  // RESTART
+  // ============================================================
   function resetGame() {
-    // nouveau mot
-    secret = getRandomWord();
-    console.log("Nouveau secret:", secret);
-
-    // reset état
+    // nouvelle partie
+    secret = pickSecret();
     currentRow = 0;
-    compteur = 6;
+    compteur = MAX_ATTEMPTS;
 
-    // Incrementer le compteur de parties jouées
+    // stats : partie jouée
     compteurPlay++;
-    playCount.textContent = "Parties jouées : " + compteurPlay;
+    saveStats();
 
-    // vider la grille + enlever couleurs + déverrouiller
-    document.querySelectorAll(".cell").forEach(cell => {
-      cell.innerText = "";
-      cell.classList.remove("correct", "present", "absent");
-      cell.dataset.locked = "0";
-    });
+    clearBoard();
+    lockFirstLetter();
 
-    // réinitialiser les couleurs du clavier
-    keys.forEach(key => {
-      key.classList.remove("correct", "present", "absent");
-    });
-
-    // remettre la 1ère lettre (motus)
-    const firstLetter = secret[0];
-    const firstCell = getRowCells(0)[0];
-    firstCell.innerText = firstLetter;
-    firstCell.dataset.locked = "1";
-
-    // remise de la position de saisie + affichage tentatives
     currentCol = moveToNextFreeCol();
-    attempt.textContent = "Tentatives restantes : " + compteur;
-    // sauvegarder l'état après reset
+    updateHUD();
     saveState();
+
+    console.log("Nouveau secret:", secret);
   }
 
+  if (restartBtn) {
     restartBtn.addEventListener("click", () => {
       restartBtn.disabled = true;
       resetGame();
       restartBtn.disabled = false;
     });
+  }
 
   // ============================================================
-  // ÉVÉNEMENTS
+  // EVENTS
   // ============================================================
-
-  del.addEventListener("click", deleteLetter);
-  enter.addEventListener("click", submitRow);
+  if (del) del.addEventListener("click", deleteLetter);
+  if (enter) enter.addEventListener("click", submitRow);
 
   keys.forEach((key) => {
+    // ignore les deux touches icône
     if (key.id === "buttonReturn" || key.id === "buttonEnter") return;
-    key.addEventListener("click", () => addLetter(key.innerText.trim().toUpperCase()));
+    key.addEventListener("click", () => addLetter(key.textContent.trim().toUpperCase()));
   });
 
   document.addEventListener("keydown", (e) => {
@@ -471,23 +520,24 @@ async function colorRowAndGetCorrect() {
   });
 
   // ============================================================
-  // INITIALISATION
+  // INIT
   // ============================================================
-  // INITIALISATION: tenter de charger l'état précédemment sauvegardé
-  if (!loadState()) {
-    attempt.textContent = "Tentatives restantes : " + compteur;
+  initCellsLockedDefault();
+  loadStats();
 
-    const firstLetter = secret[0];
-    const firstCell = getRowCells(0)[0];
-    firstCell.innerText = firstLetter;
-    firstCell.dataset.locked = "1";
-
+  // Charger la partie si elle existe, sinon en créer une
+  const loaded = loadState();
+  if (!loaded) {
+    secret = pickSecret();
+    clearBoard();
+    lockFirstLetter();
+    currentRow = 0;
+    compteur = MAX_ATTEMPTS;
     currentCol = moveToNextFreeCol();
-  } else {
-    // si un état a été chargé, s'assurer que le curseur pointe sur la bonne colonne
-    currentCol = moveToNextFreeCol();
+    saveState();
   }
+
+  updateHUD();
+  console.log("secret FINAL:", secret);
 });
-
-
   
