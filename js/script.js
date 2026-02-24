@@ -25,8 +25,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const WORD_LENGTH = 5;
   const MAX_ATTEMPTS = 6;
 
-  // ⚠️ IMPORTANT : WORD_LIST doit exister (tu l'as sûrement dans un autre fichier)
-  // Exemple : const WORD_LIST = ["ABIME","ABORD", ...]
   if (typeof WORD_LIST === "undefined" || !Array.isArray(WORD_LIST) || WORD_LIST.length === 0) {
     console.error("WORD_LIST est introuvable. Déclare WORD_LIST avant ce script.");
     return;
@@ -556,31 +554,5 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   const resetStatsBtn = document.getElementById("resetStatsBtn");
   resetStatsBtn.addEventListener("click", resetStats);
-  // ============================================================
-  // GESTION DU SON (MUTE)
-  // ============================================================
-  const muteBtn = document.getElementById("muteBtn");
-  const muteIcon = document.getElementById("muteIcon");
-  let isMuted = localStorage.getItem("gameMuted") === "true";
-
-  // Fonction pour appliquer l'état muet à tous les objets Audio
-  function applyMute() {
-    const allSounds = [soundSkeleton, soundFail, soundWin, greenCell, yellowCell, greyCell];
-    allSounds.forEach(sound => {
-      sound.muted = isMuted;
-    });
-    muteIcon.textContent = isMuted ? "Refusé 🔇" : "🔊";
-    localStorage.setItem("gameMuted", isMuted);
-  }
-
-  // Initialisation au chargement
-  applyMute();
-
-  if (muteBtn) {
-    muteBtn.addEventListener("click", () => {
-      isMuted = !isMuted; // Alterne entre true et false
-      applyMute();
-    });
-  }
 });
   
