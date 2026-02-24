@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+
   // ============================================================
   // CONSTANTES
   // ============================================================
@@ -555,5 +556,31 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   const resetStatsBtn = document.getElementById("resetStatsBtn");
   resetStatsBtn.addEventListener("click", resetStats);
+  // ============================================================
+  // GESTION DU SON (MUTE)
+  // ============================================================
+  const muteBtn = document.getElementById("muteBtn");
+  const muteIcon = document.getElementById("muteIcon");
+  let isMuted = localStorage.getItem("gameMuted") === "true";
+
+  // Fonction pour appliquer l'état muet à tous les objets Audio
+  function applyMute() {
+    const allSounds = [soundSkeleton, soundFail, soundWin, greenCell, yellowCell, greyCell];
+    allSounds.forEach(sound => {
+      sound.muted = isMuted;
+    });
+    muteIcon.textContent = isMuted ? "Refusé 🔇" : "🔊";
+    localStorage.setItem("gameMuted", isMuted);
+  }
+
+  // Initialisation au chargement
+  applyMute();
+
+  if (muteBtn) {
+    muteBtn.addEventListener("click", () => {
+      isMuted = !isMuted; // Alterne entre true et false
+      applyMute();
+    });
+  }
 });
   
