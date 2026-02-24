@@ -74,7 +74,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function saveState() {
     try {
-      const cells = Array.from(document.querySelectorAll(".cell")).map(c => ({ t: c.innerText, locked: c.dataset.locked }));
+      const cells = Array.from(document.querySelectorAll(".cell")).map(c => ({
+  t: c.innerText,
+  locked: c.dataset.locked,
+  state: c.classList.contains("correct") ? "correct"
+       : c.classList.contains("present") ? "present"
+       : c.classList.contains("absent")  ? "absent"
+       : ""
+}));
       const keysState = Array.from(keys).map(k => k.className);
       const state = { secret, currentRow, currentCol, compteur, compteurWin, compteurPlay, cells, keysState };
       localStorage.setItem("tusmo_state", JSON.stringify(state));
@@ -99,16 +106,19 @@ document.addEventListener("DOMContentLoaded", function () {
       compteurPlay = (typeof state.compteurPlay === 'number') ? state.compteurPlay : 0;
 
       // Restaurer cellules
-      const cells = document.querySelectorAll('.cell');
-      if (state.cells && Array.isArray(state.cells)) {
-        state.cells.forEach((c, i) => {
-          if (cells[i]) {
-            cells[i].innerText = c.t || "";
-            cells[i].dataset.locked = c.locked || "0";
-            cells[i].classList.remove('correct', 'present', 'absent');
-          }
-        });
-      }
+     const cells = document.querySelectorAll(".cell");
+if (state.cells && Array.isArray(state.cells)) {
+  state.cells.forEach((c, i) => {
+    if (!cells[i]) return;
+
+    cells[i].innerText = c.t || "";
+    cells[i].dataset.locked = c.locked || "0";
+
+    // restaurer couleur
+    cells[i].classList.remove("correct", "present", "absent");
+    if (c.state) cells[i].classList.add(c.state);
+  });
+}
 
       // Restaurer état clavier si présent
       if (Array.isArray(state.keysState)) {
@@ -276,6 +286,9 @@ async function colorRowAndGetCorrect() {
     }
   }
 
+  // Sauvegarder immédiatement pour persister les couleurs des cellules et du clavier
+  saveState();
+
   // On renvoie les lettres correctes pour bloquer la prochaine ligne
   return correctLetters;
 }
@@ -295,6 +308,8 @@ async function colorRowAndGetCorrect() {
         nextCells[i].dataset.locked = "0";
       }
     }
+    // Sauvegarder après application des lettres correctes à la prochaine ligne
+    saveState();
   }
 
   async function submitRow() {
@@ -474,12 +489,5 @@ async function colorRowAndGetCorrect() {
   }
 });
 
-  attempt.textContent = "Tentatives restantes : " + compteur;
 
-  const firstLetter = secret[0];
-  const firstCell = getRowCells(0)[0];
-  firstCell.innerText = firstLetter;
-  firstCell.dataset.locked = "1";
-
-  currentCol = moveToNextFreeCol(); 
   
