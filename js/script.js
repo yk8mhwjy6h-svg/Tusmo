@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+  localStorage.removeItem("tusmo_state");
 
   // bouton de démarage"
   const startScreen = document.getElementById("startScreen");
